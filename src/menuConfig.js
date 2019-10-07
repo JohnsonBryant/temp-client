@@ -8,32 +8,22 @@ const asideMenuConfig = [
   {
     path: '/dashboard',
     name: '实时监测',
-    icon: 'el-icon-menu',
-    children: [
-      {
-        path: '/analysis',
-        name: '分析页',
-      },
-      {
-        path: '/monitor',
-        name: '监控页',
-      },
-      {
-        path: '/workplace',
-        name: '工作台',
-      },
-    ],
+    icon: 'el-icon-menu'
   },
   {
-    path: '/charts',
+    path: '/analysis',
     name: '图表页',
-    icon: 'el-icon-picture-outline',
-    children: [
-      {
-        path: '/line',
-        name: '折线图',
-      }
-    ],
+    icon: 'el-icon-menu'
+  },
+  {
+    path: '/history',
+    name: '历史数据',
+    icon: 'el-icon-menu'
+  },
+  {
+    path: '/workplace',
+    name: '功能配置',
+    icon: 'el-icon-menu'
   }
 ];
 

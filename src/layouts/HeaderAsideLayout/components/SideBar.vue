@@ -1,7 +1,7 @@
 <template>
   <scroll-bar>
     <div class="logo">
-      <img src="https://img.alicdn.com/tfs/TB13UQpnYGYBuNjy0FoXXciBFXa-242-134.png" width="40">
+      <img src="../../../assets/logo_feibing.png" width="40">
       <span class="site-name">ADMIN LITE</span>
     </div>
     <el-menu
