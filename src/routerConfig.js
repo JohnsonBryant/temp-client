@@ -8,12 +8,18 @@ import NotFound from './pages/NotFound';
 import Analysis from './pages/Analysis';
 import History from './pages/History';
 import Workspace from './pages/Workspace';
+import LandingPage from './pages/LandingPage';
 
 const routerConfig = [
   {
     path: '/',
     layout: HeaderAsideLayout,
-    component: Dashboard,
+    component: LandingPage,
+  },
+  {
+    path: '/landingPage',
+    layout: HeaderAsideLayout,
+    component: LandingPage,
   },
   {
     path: '/dashboard',

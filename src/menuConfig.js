@@ -6,6 +6,11 @@ const headerMenuConfig = [];
 
 const asideMenuConfig = [
   {
+    path: '/landingPage',
+    name: '设备管理',
+    icon: 'el-icon-menu'
+  },
+  {
     path: '/dashboard',
     name: '实时监测',
     icon: 'el-icon-menu'
