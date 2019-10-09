@@ -9,6 +9,7 @@ import Analysis from './pages/Analysis';
 import History from './pages/History';
 import Workspace from './pages/Workspace';
 import LandingPage from './pages/LandingPage';
+import AddEquipment from './pages/AddEquipment';
 
 const routerConfig = [
   {
@@ -40,6 +41,11 @@ const routerConfig = [
     path: '/workplace',
     layout: HeaderAsideLayout,
     component: Workspace,
+  },
+  {
+    path: '/addEquipment',
+    layout: HeaderAsideLayout,
+    component: AddEquipment,
   },
   {
     path: '*',

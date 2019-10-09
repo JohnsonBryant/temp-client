@@ -4,8 +4,9 @@
       <el-col :span="24">
         <el-card shadow="always" style="position:relative;">
           <span>设备管理页</span>
-
-          <el-button icon="el-icon-plus" type="text" style="position:absolute; right:24px;top:2px;font-size:26px;"></el-button>
+          <router-link to="/addEquipment">
+            <el-button @click="addEquipmentClick()" class="add-equipment-btn" icon="el-icon-plus" type="text"></el-button>
+          </router-link>
         </el-card>
 
         <el-table
@@ -24,6 +25,11 @@
             prop="em"
             label="设备厂家"
             width="180">
+          </el-table-column>
+          <el-table-column
+            prop="deviceName"
+            label="设备名称"
+            width="150">
           </el-table-column>
           <el-table-column
             prop="deviceType"
@@ -62,8 +68,6 @@
             sortable
             width="150"
             column-key="date"
-            :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
-            :filter-method="filterHandler"
           >
           </el-table-column>
         </el-table>
@@ -80,6 +84,7 @@ export default {
       tableData: [{
           date: '2016-05-02 22:22',
           em: '南京高华',
+          deviceName: '温度传感器',
           deviceType: 'ew01',
           id: '01',
           cycle: 10,
@@ -89,6 +94,7 @@ export default {
         }, {
           date: '2016-05-04 22:22',
           em: '南京高华',
+          deviceName: '温度传感器',
           deviceType: 'ew01',
           id: '01',
           cycle: 10,
@@ -98,6 +104,7 @@ export default {
         }, {
           date: '2016-05-01 22:22',
           em: '南京高华',
+          deviceName: '温度传感器',
           deviceType: 'ew01',
           id: '01',
           cycle: 10,
@@ -107,6 +114,7 @@ export default {
         }, {
           date: '2016-05-03 22:22',
           em: '南京高华',
+          deviceName: '温度传感器',
           deviceType: 'ew01',
           id: '01',
           cycle: 10,
@@ -132,6 +140,9 @@ export default {
     filterHandler(value, row, column) {
       const property = column['property'];
       return row[property] === value;
+    },
+    addEquipmentClick() {
+
     }
   }
 };
@@ -140,5 +151,12 @@ export default {
 <style lang="scss" scoped>
 .landing-page{
   padding: 10px 10px 0 10px;
+}
+
+.add-equipment-btn{
+  position:absolute;
+  right:24px;
+  top:2px;
+  font-size:26px;
 }
 </style>

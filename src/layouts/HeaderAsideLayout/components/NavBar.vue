@@ -9,7 +9,7 @@
 export default {
   data () {
     return {
-
+      
     }
   },
   name: 'NavBar',
@@ -21,6 +21,8 @@ export default {
   position: relative;
   height: 64px;
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  margin-left: 10px;
+  margin-right: 10px;
 }
 </style>
 
