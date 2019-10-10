@@ -10,6 +10,7 @@ import History from './pages/History';
 import Workspace from './pages/Workspace';
 import LandingPage from './pages/LandingPage';
 import AddEquipment from './pages/AddEquipment';
+import TestConfig from './pages/TestConfig';
 
 const routerConfig = [
   {
@@ -21,6 +22,11 @@ const routerConfig = [
     path: '/landingPage',
     layout: HeaderAsideLayout,
     component: LandingPage,
+  },
+  {
+    path: '/testConfig',
+    layout: HeaderAsideLayout,
+    component: TestConfig,
   },
   {
     path: '/dashboard',

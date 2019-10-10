@@ -17,23 +17,17 @@
             <el-row :gutter="15">
               <el-col :span="8">
                 <el-card class="box-card box-item">
-                  <el-input class="device-input" placeholder="请输入设备厂家" v-model="company">
+                  <el-input class="device-input" placeholder="请输入设备厂家" v-model="equipmentInfo[0].em">
                     <template slot="prepend">设备厂家：</template>
                   </el-input>
-                  <el-input class="device-input" placeholder="请输入设备型号" v-model="company">
+                  <el-input class="device-input" placeholder="请输入设备型号" v-model="equipmentInfo[0].deviceName">
+                    <template slot="prepend">设备名称：</template>
+                  </el-input>
+                  <el-input class="device-input" placeholder="请输入设备型号" v-model="equipmentInfo[0].deviceType">
                     <template slot="prepend">设备型号：</template>
                   </el-input>
-                  <el-input class="device-input" placeholder="请输入设备编号" v-model="company">
+                  <el-input class="device-input" placeholder="请输入设备编号" v-model="equipmentInfo[0].deviceID">
                     <template slot="prepend">设备编号：</template>
-                  </el-input>
-                  <el-input class="device-input" placeholder="请输入工作周期" v-model="company">
-                    <template slot="prepend">工作周期：</template>
-                  </el-input>
-                  <el-input class="device-input" placeholder="请输入温度示值" v-model="company">
-                    <template slot="prepend">温度示值：</template>
-                  </el-input>
-                  <el-input class="device-input" placeholder="请输入湿度示值" v-model="company">
-                    <template slot="prepend">湿度示值：</template>
                   </el-input>
                 </el-card>
               </el-col>
@@ -56,7 +50,10 @@ export default {
   name: 'add-equipment',
   data() {
     return {
-      
+      company: '',
+      equipmentInfo: [
+        {em: '', deviceName: '', deviceType: '', deviceID: ''},
+      ]
     };
   },
 };
@@ -94,11 +91,12 @@ export default {
 
 .box-item{
   height: 360px;
+  padding-top: 30px;
   position: relative;
 }
 
 .device-input {
-  margin-bottom: 14px;
+  margin-bottom: 30px;
 }
 
 .box-add-btn .btn {

@@ -11,6 +11,11 @@ const asideMenuConfig = [
     icon: 'el-icon-menu'
   },
   {
+    path: '/testConfig',
+    name: '测试管理',
+    icon: 'el-icon-menu'
+  },
+  {
     path: '/dashboard',
     name: '实时监测',
     icon: 'el-icon-menu'

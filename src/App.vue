@@ -21,12 +21,26 @@
   border-right: none; 
 }
 
+.selectEq-container .el-drawer{
+  background: transparent;
+
+}
+.selectEq-container .el-drawer__header{
+  padding: 0;
+  margin: 0;
+}
+.selectEq-container .el-el-drawer__header, .selectEq-container .el-drawer__body{
+  background: #ffffff;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
 .el-table-filter__bottom button{
   font-size: 15px;
   padding: 0 18px;
 }
 
-.addform-container .el-divider__text {
+.el-divider__text {
   color: #909399;
 }
 /*复写默认样式*/
