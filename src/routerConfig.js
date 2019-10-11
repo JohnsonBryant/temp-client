@@ -5,7 +5,6 @@
 import HeaderAsideLayout from './layouts/HeaderAsideLayout';
 import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
-import Analysis from './pages/Analysis';
 import History from './pages/History';
 import Workspace from './pages/Workspace';
 import LandingPage from './pages/LandingPage';
@@ -32,11 +31,6 @@ const routerConfig = [
     path: '/dashboard',
     layout: HeaderAsideLayout,
     component: Dashboard,
-  },
-  {
-    path: '/analysis',
-    layout: HeaderAsideLayout,
-    component: Analysis,
   },
   {
     path: '/history',

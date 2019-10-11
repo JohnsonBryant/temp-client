@@ -6,4 +6,8 @@ module.exports = {
       extensions: ['.js', '.json', '.vue'],
     },
   },
+  transpileDependencies: [
+    'vue-echarts',
+    'resize-detector'
+  ]
 };

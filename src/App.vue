@@ -43,6 +43,10 @@
 .el-divider__text {
   color: #909399;
 }
+
+.dash-test-item .el-card__body{
+  padding: 0;
+}
 /*复写默认样式*/
 
 </style>
