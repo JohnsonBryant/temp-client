@@ -5,11 +5,11 @@
 import HeaderAsideLayout from './layouts/HeaderAsideLayout';
 import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
-import History from './pages/History';
 import Workspace from './pages/Workspace';
 import LandingPage from './pages/LandingPage';
 import AddEquipment from './pages/AddEquipment';
 import TestConfig from './pages/TestConfig';
+// import History from './pages/History';
 
 const routerConfig = [
   {
@@ -32,11 +32,11 @@ const routerConfig = [
     layout: HeaderAsideLayout,
     component: Dashboard,
   },
-  {
-    path: '/history',
-    layout: HeaderAsideLayout,
-    component: History,
-  },
+  // {
+  //   path: '/history',
+  //   layout: HeaderAsideLayout,
+  //   component: History,
+  // },
   {
     path: '/workplace',
     layout: HeaderAsideLayout,

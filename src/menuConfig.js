@@ -21,15 +21,15 @@ const asideMenuConfig = [
     icon: 'el-icon-menu'
   },
   {
-    path: '/history',
-    name: '历史数据',
-    icon: 'el-icon-menu'
-  },
-  {
     path: '/workplace',
     name: '功能配置',
     icon: 'el-icon-menu'
   }
+  // {
+  //   path: '/history',
+  //   name: '历史数据',
+  //   icon: 'el-icon-menu'
+  // },
 ];
 
 export { headerMenuConfig, asideMenuConfig };

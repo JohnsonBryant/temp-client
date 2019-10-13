@@ -5,6 +5,9 @@
         <el-card shadow="always">
           功能配置页
         </el-card>
+        <el-card shadow="always">
+          
+        </el-card>
       </el-col>
     </el-row>
   </div>

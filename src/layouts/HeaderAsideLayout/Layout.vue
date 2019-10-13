@@ -92,9 +92,10 @@ export default {
 }
 
 .sidebar-btn {
-  position: absolute;
+  position: fixed;
   right: 10px;
   top: 50%;
+  transform: translateY(-50%);
   z-index: 1003;
   font-size: 36px;
 }

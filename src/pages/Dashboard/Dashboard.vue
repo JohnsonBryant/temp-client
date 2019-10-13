@@ -1,5 +1,6 @@
 <template>
 <div class="dashboard">
+  <el-button class="saveData" type="primary">上传<i class="el-icon-upload el-icon--right"></i></el-button>
   <el-card class="dash-test-item" shadow="always">
     <h4>委托单位  --  设备厂家  --  设备名称  --  设备型号  --  设备编号</h4>
     <el-row :gutter="12">
@@ -7,12 +8,12 @@
         <el-row :gutter="8">
           <el-col :span="12">
             <el-card class="test-item-chart" shadow="always">
-              <v-chart style="width:90%;height:340px;" :options="temps"/>
+              <v-chart style="width:90%;height:460px;" :options="temps"/>
             </el-card>
           </el-col>
           <el-col :span="12">
             <el-card class="test-item-chart" shadow="always">
-              <v-chart style="width:90%;height:340px;" :options="humis"/>
+              <v-chart style="width:90%;height:460px;" :options="humis"/>
             </el-card>
           </el-col>
         </el-row>
@@ -20,33 +21,81 @@
       <el-col :span="6">
         <el-card class="test-item-data" shadow="always">
           <h4>数据更新时间：2019-10-11 22:00:00</h4>
-          <ul class="item-data-sensor">
-            <li>
-              <div>ID：1，电量：80.8%</div>
-              <div>温度：10.0，湿度：55.5</div>
-            </li>
-            <li>
-              <div>ID：2，电量：80.8%</div>
-              <div>温度：10.0，湿度：55.5</div>
-            </li>
-            <li>
-              <div>ID：3，电量：80.8%</div>
-              <div>温度：10.0，湿度：55.5</div>
-            </li>
-          </ul>
           <div class="test-item-testdata">
-            <div>
-              <h4>温度</h4>
-              <li>均匀度：-22.22</li>
-              <li>波动度：-22.22</li>
-              <li>偏差：-22.22</li>
-            </div>
-            <div>
-              <h4>湿度</h4>
-              <li>均匀度：-22.22</li>
-              <li>波动度：-22.22</li>
-              <li>偏差：-22.22</li>
-            </div>
+            <el-table
+              :data="testData"
+              style="width: 100%"
+              stripe="true"
+              >
+              <el-table-column
+                prop="name"
+                label="计算值/ID"
+                min-width="100"
+                >
+              </el-table-column>
+              <el-table-column
+                prop="tempData"
+                label="温度"
+                min-width="100"
+                >
+              </el-table-column>
+              <el-table-column
+                prop="humiData"
+                label="湿度"
+                min-width="100"
+                >
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+  </el-card>
+    <el-card class="dash-test-item" shadow="always">
+    <h4>委托单位  --  设备厂家  --  设备名称  --  设备型号  --  设备编号</h4>
+    <el-row :gutter="12">
+      <el-col :span="18">
+        <el-row :gutter="8">
+          <el-col :span="12">
+            <el-card class="test-item-chart" shadow="always">
+              <v-chart style="width:90%;height:460px;" :options="temps"/>
+            </el-card>
+          </el-col>
+          <el-col :span="12">
+            <el-card class="test-item-chart" shadow="always">
+              <v-chart style="width:90%;height:460px;" :options="humis"/>
+            </el-card>
+          </el-col>
+        </el-row>
+      </el-col>
+      <el-col :span="6">
+        <el-card class="test-item-data" shadow="always">
+          <h4>数据更新时间：2019-10-11 22:00:00</h4>
+          <div class="test-item-testdata">
+            <el-table
+              :data="testData"
+              style="width: 100%"
+              stripe="true"
+              >
+              <el-table-column
+                prop="name"
+                label="计算值/ID"
+                min-width="100"
+                >
+              </el-table-column>
+              <el-table-column
+                prop="tempData"
+                label="温度"
+                min-width="100"
+                >
+              </el-table-column>
+              <el-table-column
+                prop="humiData"
+                label="湿度"
+                min-width="100"
+                >
+              </el-table-column>
+            </el-table>
           </div>
         </el-card>
       </el-col>
@@ -74,6 +123,16 @@ export default {
     }
 
     return {
+      testData: [
+        {name:"1", tempData: 22.22, humiData: 33.33},
+        {name:"2", tempData: 22.22, humiData: 33.33},
+        {name:"3", tempData: 22.22, humiData: 33.33},
+        {name:"4", tempData: 22.22, humiData: 33.33},
+        {name:"5", tempData: 22.22, humiData: 33.33},
+        {name:"均匀度：", tempData: 22.22, humiData: 33.33},
+        {name:"波动度：", tempData: 22.22, humiData: 33.33},
+        {name:"偏差：", tempData: 22.22, humiData: 33.33}
+      ],
       temps: {
         title: {
           text: '折线图堆叠'
@@ -222,12 +281,29 @@ export default {
   color: #707377;
 }
 
+.test-item-data .el-card__body > h4{
+  text-align: left;
+  padding-left: 10px;
+  font-size: 14px;
+}
+
 .dash-test-item .test-item-chart{
-  height: 350px;
+  height: 480px;
 }
 
 .dash-test-item .test-item-data{
-  height: 350px;
+  height: 480px;
+  overflow: auto;
 }
 
+.dash-test-item .test-item-col{
+  text-align: center;
+}
+
+.saveData {
+  position: fixed;
+  top: 12px;
+  right: 40px;
+  z-index: 1005;
+}
 </style>
