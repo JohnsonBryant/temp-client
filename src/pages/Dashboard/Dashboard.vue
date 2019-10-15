@@ -1,6 +1,6 @@
 <template>
 <div class="dashboard">
-  <el-button class="saveData" type="primary">上传<i class="el-icon-upload el-icon--right"></i></el-button>
+  <el-button class="saveData" type="primary">下载数据<i class="el-icon-download el-icon--right"></i></el-button>
   <el-card class="dash-test-item" shadow="always">
     <h4>委托单位  --  设备厂家  --  设备名称  --  设备型号  --  设备编号</h4>
     <el-row :gutter="12">
