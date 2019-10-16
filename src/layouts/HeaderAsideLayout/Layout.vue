@@ -5,7 +5,7 @@
       <el-drawer
         class="siderbar-container"
         :visible.sync="drawer"
-        :direction="rtl"
+        direction="rtl"
         :modal="false"
         :show-close="false"
         size="256px"
