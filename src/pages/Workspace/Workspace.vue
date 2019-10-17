@@ -20,7 +20,7 @@
                         </el-input>
                       </el-col>
                       <el-col :span="10">
-                        <el-input placeholder="输入波特率" v-model.trim="config.BaudRate">
+                        <el-input placeholder="输入波特率" v-model.trim.number="config.BaudRate">
                           <template slot="prepend">波特率：</template>
                         </el-input>
                       </el-col>
@@ -94,8 +94,6 @@
                       <template slot="prepend">温度示值：</template>
                     </el-input>
                   </el-col>
-                <!-- </el-row>                
-                <el-row ::gutter="10"> -->
                   <el-col class="wk-template" :span="12">
                     <el-input class="testEq-item-conf-input" placeholder="输入中心点ID" v-model.trim="testTemplate.centerID">
                       <template slot="prepend">中心点ID：</template>
@@ -146,17 +144,28 @@ export default {
   },
   mounted() {
     this.messages.push({id: this.messages.length+1, value: 'message'+new Date().toLocaleTimeString()})
+    this.initConfig()
   },
   methods: {
     handlePortSetClick(e) {
-      console.log(e.target)
-      return
-      this.axios.post('', {})
+      this.axios.post('/serialportConf/set', {
+          SerialPortName: this.config.SerialPortName,
+          BaudRate: this.config.BaudRate
+        })
         .then(res => {
           console.log(res)
         })
         .catch(err => {
-
+          console.log(err)          
+        })
+    },
+    initConfig() {
+      this.axios.get('https://4989dc85-538e-4c2c-b7ca-81b9fe46544a.mock.pstmn.io/config/get')
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)          
         })
     }
   }
