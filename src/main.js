@@ -8,6 +8,7 @@ import Qs from 'qs'
 import VueSocketIO from 'vue-socket.io'
 import ECharts from 'vue-echarts'
 import router from './router';
+import util from './util.js'
 import App from './App.vue';
 
 Vue.use(new VueSocketIO({
@@ -20,6 +21,7 @@ Vue.component('v-chart', ECharts)
 Vue.config.productionTip = false;
 Vue.prototype.axios = axios
 Vue.prototype.Qs = Qs
+Vue.prototype.util = util
 
 let vm = new Vue({
   router,

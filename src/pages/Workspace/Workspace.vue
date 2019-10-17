@@ -42,28 +42,28 @@
                         </el-input>
                       </el-col>
                       <el-col :span="4">
-                        <el-button type="primary">提交<i class="el-icon-check el-icon--right"></i></el-button>
+                        <el-button @click="handleBatterySetClick" type="primary">提交<i class="el-icon-check el-icon--right"></i></el-button>
                       </el-col>                      
                     </el-row>
                   </div>
                   <div class="wk-item-pie box3">
                     <el-row :gutter="10">
                       <el-col :span="10">
-                        <el-input placeholder="输入原始ID" v-model.trim="idSetting.originID">
+                        <el-input placeholder="输入原始ID" v-model.trim.number="idSetting.originID">
                           <template slot="prepend">原始ID：</template>
                         </el-input>
                       </el-col>
                       <el-col :span="10">
-                        <el-input placeholder="输入新设ID" v-model.trim="idSetting.newID">
+                        <el-input placeholder="输入新设ID" v-model.trim.number="idSetting.newID">
                           <template slot="prepend">新设ID：</template>
                         </el-input>
                       </el-col>
                       <el-col :span="4">
-                        <el-button type="primary">提交<i class="el-icon-check el-icon--right"></i></el-button>
+                        <el-button @click="handleIDSetClick" type="primary">提交<i class="el-icon-check el-icon--right"></i></el-button>
                       </el-col>
                     </el-row>
                     <div class="wk-item-search-sensor">
-                      <el-button type="success">搜索传感器<i class="el-icon-check el-icon--right"></i></el-button>
+                      <el-button @click="handleSerachSensorClick" type="success">搜索传感器<i class="el-icon-check el-icon--right"></i></el-button>
                     </div>                    
                   </div>
                   <div class="wk-item-pie message-box">
@@ -106,7 +106,7 @@
                   </el-col>
                 </el-row>                
                 <div class="wk-template-btns">
-                  <el-button type="primary">保存测试模板<i class="el-icon-check el-icon--right"></i></el-button>
+                  <el-button @click="handletestTemplateSaveClick" type="primary">保存测试模板<i class="el-icon-check el-icon--right"></i></el-button>
                 </div>
               </el-card>
             </el-col>
@@ -118,26 +118,28 @@
 </template>
 
 <script>
+import Vue from 'vue'
+
 export default {
   name: 'workspace',
   data() {
     return {
       config: {
-        SerialPortName: "COM10",
-        BaudRate: 115200,
-        BatteryLow: 2.8,
-        BatteryHigh: 3.5
+        SerialPortName: '',
+        BaudRate: '',
+        BatteryLow: '',
+        BatteryHigh: ''
       },
       idSetting: {
-        originID: '1',
-        newID: '2'
+        originID: '',
+        newID: ''
       },
       testTemplate: {
-        cycle: 10,
-        temp: 20,
-        humi: 50,
-        centerID: 1,
-        IDS: "2,3"
+        cycle: '',
+        temp: '',
+        humi: '',
+        centerID: '',
+        IDS: ''
       },
       messages: [{id: 0, value: 'first message'}]
     }
@@ -147,26 +149,117 @@ export default {
     this.initConfig()
   },
   methods: {
-    handlePortSetClick(e) {
-      this.axios.post('/serialportConf/set', {
+    handlePortSetClick() {
+      // 串口参数修改数据提交处理函数
+      this.axios.post(this.util.testApi() + '/serialportConf/set', {
           SerialPortName: this.config.SerialPortName,
           BaudRate: this.config.BaudRate
         })
         .then(res => {
-          console.log(res)
+          if (res.data.isSuccessed) {
+            console.log('串口参数修改成功')
+          } else {
+            console.log('串口参数修改失败，请按F5刷新后重新尝试！')
+          }
         })
         .catch(err => {
-          console.log(err)          
+          console.log(err)
+        })
+    },
+    handleBatterySetClick() {
+      // 电池参数修改数据提交处理函数
+      this.axios.post(this.util.testApi() + '/batteryConf/set', {
+          BatteryLow: this.config.BatteryLow,
+          BatteryHigh: this.config.BatteryHigh
+        })
+        .then(res => {
+          if (res.data.isSuccessed) {
+            console.log('电池参数修改成功')
+          } else {
+            console.log('电池参数修改失败，请按F5刷新后重新尝试！')
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    handleIDSetClick() {
+      if (this.idSetting.originID === '' || this.idSetting.newID === '') {
+        alert('请输入原始ID和新设ID后，再提交修改！')
+        return
+      }
+      // 更改传感器ID，提交处理函数
+      this.axios.post(this.util.testApi() + '/idSet', {
+          originID: this.idSetting.originID,
+          newID: this.idSetting.newID
+        })
+        .then(res => {
+          if (res.data.isSuccessed) {
+            console.log('修改传感器ID发送成功')
+          } else {
+            console.log('修改传感器ID发送失败，请按F5刷新后重新尝试！')
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    handleSerachSensorClick() {
+      // 搜索传感器命令发送
+      this.axios.get(this.util.testApi() + '/searchSensor')
+        .then(res => {
+          if (res.data.isSuccessed) {
+            console.log('搜索传感器发送成功')
+          } else {
+            console.log('搜索传感器发送失败，请按F5刷新后重新尝试！')
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    handletestTemplateSaveClick() {
+      // 测试模板修改提交处理函数
+      this.axios.post(this.util.testApi() + '/testTemplate/set', {
+          cycle: this.testTemplate.cycle,
+          temp: this.testTemplate.temp,
+          humi: this.testTemplate.humi,
+          centerID: this.testTemplate.centerID,
+          IDS: this.testTemplate.IDS,
+        })
+        .then(res => {
+          if (res.data.isSuccessed) {
+            console.log('测试模板保存成功')
+          } else {
+            console.log('测试模板保存失败，请按F5刷新后重新尝试！')
+          }
+        })
+        .catch(err => {
+          console.log(err)
         })
     },
     initConfig() {
-      this.axios.get('https://4989dc85-538e-4c2c-b7ca-81b9fe46544a.mock.pstmn.io/config/get')
+      // 获取当前程序配置信息，并初始化 data.config
+      this.axios.get(this.util.testApi() + '/config/get')
         .then(res => {
-          console.log(res)
+          this.setData(this.config, res.data)
         })
         .catch(err => {
-          console.log(err)          
+          console.log(err)
         })
+      // 获取当前测试模板信息，并初始化 data.testTemplate
+      this.axios.get(this.util.testApi() + '/testTemplate/get')
+        .then(res => {
+          this.setData(this.testTemplate, res.data)
+        })
+        .catch(err => {
+          console.log(err)    
+        })
+    },
+    setData(originData, newData) {
+      Object.keys(newData).forEach((key) => {
+        Vue.set(originData, key, newData[key])
+      })
     }
   }
 };
@@ -191,10 +284,6 @@ export default {
   font-weight: lighter;
 }
 
-.wk-item-container{
-  
-}
-
 .wk-item-search-sensor{
   padding-top: 20px;
 }
@@ -204,12 +293,6 @@ export default {
 }
 .wk-item-pie.box1{
   padding-top: 0;
-}
-.wk-item-pie.box2{
-  
-}
-.wk-item-pie.box3{
-  
 }
 
 .wk-item-pie.message-box{
