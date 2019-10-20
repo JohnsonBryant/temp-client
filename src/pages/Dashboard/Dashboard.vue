@@ -3,7 +3,7 @@
   <el-button class="saveData" type="primary">下载数据<i class="el-icon-download el-icon--right"></i></el-button>
   <el-card class="dash-test-item" shadow="always">
     <h4>委托单位  --  设备厂家  --  设备名称  --  设备型号  --  设备编号</h4>
-    <el-row :gutter="12">
+    <el-row :gutter="6">
       <el-col :span="18">
         <el-row :gutter="8">
           <el-col :span="12">
@@ -30,19 +30,19 @@
               <el-table-column
                 prop="name"
                 label="计算值/ID"
-                min-width="100"
+                min-width="120"
                 >
               </el-table-column>
               <el-table-column
                 prop="tempData"
-                label="温度"
-                min-width="100"
+                label="温度℃"
+                min-width="90"
                 >
               </el-table-column>
               <el-table-column
                 prop="humiData"
-                label="湿度"
-                min-width="100"
+                label="湿度%RH"
+                min-width="90"
                 >
               </el-table-column>
             </el-table>
@@ -53,7 +53,7 @@
   </el-card>
     <el-card class="dash-test-item" shadow="always">
     <h4>委托单位  --  设备厂家  --  设备名称  --  设备型号  --  设备编号</h4>
-    <el-row :gutter="12">
+    <el-row :gutter="6">
       <el-col :span="18">
         <el-row :gutter="8">
           <el-col :span="12">
@@ -80,19 +80,19 @@
               <el-table-column
                 prop="name"
                 label="计算值/ID"
-                min-width="100"
+                min-width="120"
                 >
               </el-table-column>
               <el-table-column
                 prop="tempData"
-                label="温度"
-                min-width="100"
+                label="温度℃"
+                min-width="90"
                 >
               </el-table-column>
               <el-table-column
                 prop="humiData"
-                label="湿度"
-                min-width="100"
+                label="湿度%RH"
+                min-width="90"
                 >
               </el-table-column>
             </el-table>
@@ -135,6 +135,10 @@ export default {
           trigger: 'axis'
         },
         legend: {
+          left: 35,
+          textStyle: {
+            fontSize: 14,
+          },
           data:['ID1','ID2','ID3','ID4','ID5','ID6','ID7','ID8','ID9','ID10']
         },
         grid: {
@@ -230,6 +234,10 @@ export default {
           trigger: 'axis'
         },
         legend: {
+          left: 35,
+          textStyle: {
+            fontSize: 14,
+          },
           data:['ID1','ID2','ID3','ID4','ID5']
         },
         grid: {

@@ -155,7 +155,6 @@ background-color: #F5F7FA;"
                     </el-row>
                     <div class="wk-template-btns">
                       <el-button @click="handletestTemplateSaveClick" type="primary">保存测试模板<i class="el-icon-check el-icon--right"></i></el-button>
-
                     </div>
                   </div>
                 </el-form>
@@ -322,9 +321,9 @@ export default {
       this.axios.get(this.util.testApi() + '/searchSensor')
         .then(res => {
           if (res.data.isSuccessed) {
-            this.addMessage('搜索传感器发送成功', 'success')
+            this.showSearchSencor('搜索传感器发送成功，1,2,3,4,5,6,7,8,9,10,12,11,13,14,15,16,17，18', 'success')
           } else {
-            this.addMessage('搜索传感器发送失败，请按F5刷新后重新尝试！', 'warning')
+            this.showSearchSencor('搜索传感器发送失败，请按F5刷新后重新尝试！', 'warning')
           }
         })
         .catch(err => {
@@ -341,6 +340,7 @@ export default {
               humi: this.testTemplate.humi,
               centerID: this.testTemplate.centerID,
               IDS: this.testTemplate.IDS,
+              isSendding: this.testTemplate.isSendding,
             })
             .then(res => {
               if (res.data.isSuccessed) {
@@ -388,8 +388,21 @@ export default {
         message: message,
         type: messageType
       })
+    },
+    showSearchSencor(message, messageType) {
+      this.$message({
+        message: message,
+        type: messageType,
+        duration: 10000,
+        // showClose: true
+      })
     }
-  }
+  },
+  sockets:{
+    dataMsg: function(pack){
+      console.log(pack)
+    },
+  },
 };
 </script>
 
