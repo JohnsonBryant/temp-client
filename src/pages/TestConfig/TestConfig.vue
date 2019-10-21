@@ -1,11 +1,12 @@
 <template>
   <div class="test-config">
+    <!-- 测试管理页头，工作周期输入框、控制按钮 -->
     <el-row style="margin-bottom:10px;">
       <el-col class="header" :span="24">
         <el-card shadow="always">
           <div class="header-input-container">
             <span>测试管理页</span>
-            <el-input class="cycle-input" placeholder="请输入工作周期s" v-model="company">
+            <el-input class="cycle-input" placeholder="请输入工作周期s" v-model="cycle">
               <template slot="prepend">工作周期：</template>
             </el-input>
           </div>
@@ -17,99 +18,47 @@
         </el-card>
       </el-col>
     </el-row>
-
+    <!-- 测试设备配置区块，展示所有测试设备配置信息 -->
     <div class="testEq-container">
-      <el-card class="testEq-item" shadow="always">
-        <h4>委托单位  --  设备厂家  --  设备名称  --  设备型号  --  设备编号</h4>
-        <div class="testEq-item-conf">
-          <el-row :gutter="20">
-            <el-col :span="5">
-              <el-input class="testEq-item-conf-input" placeholder="输入温度示值" v-model="company">
-                <template slot="prepend">温度示值：</template>
-              </el-input>
-            </el-col>
-            <el-col :span="5">
-              <el-input class="testEq-item-conf-input" placeholder="输入湿度示值" v-model="company">
-                <template slot="prepend">温度示值：</template>
-              </el-input>
-            </el-col>
-            <el-col :span="5">
-              <el-input class="testEq-item-conf-input" placeholder="输入中心点ID" v-model="company">
-                <template slot="prepend">中心点ID：</template>
-              </el-input>
-            </el-col>
-            <el-col :span="9">
-              <el-input class="testEq-item-conf-input" placeholder="输入传感器ID：1,2" v-model="company">
-                <template slot="prepend">传感器ID：</template>
-              </el-input>
-            </el-col>
-          </el-row>
-        </div>
-      </el-card>
-      <el-card class="testEq-item" shadow="always">
-        <h4>委托单位  --  设备厂家  --  设备名称  --  设备型号  --  设备编号</h4>
-        <div class="testEq-item-conf">
-          <el-row :gutter="20">
-            <el-col :span="5">
-              <el-input class="testEq-item-conf-input" placeholder="输入温度示值" v-model="company">
-                <template slot="prepend">温度示值：</template>
-              </el-input>
-            </el-col>
-            <el-col :span="5">
-              <el-input class="testEq-item-conf-input" placeholder="输入湿度示值" v-model="company">
-                <template slot="prepend">温度示值：</template>
-              </el-input>
-            </el-col>
-            <el-col :span="5">
-              <el-input class="testEq-item-conf-input" placeholder="输入中心点ID" v-model="company">
-                <template slot="prepend">中心点ID：</template>
-              </el-input>
-            </el-col>
-            <el-col :span="9">
-              <el-input class="testEq-item-conf-input" placeholder="输入传感器ID：1,2" v-model="company">
-                <template slot="prepend">传感器ID：</template>
-              </el-input>
-            </el-col>
-          </el-row>
-        </div>
-      </el-card>
-      <el-card class="testEq-item" shadow="always">
-        <h4>委托单位  --  设备厂家  --  设备名称  --  设备型号  --  设备编号</h4>
-        <div class="testEq-item-conf">
-          <el-row :gutter="20">
-            <el-col :span="5">
-              <el-input class="testEq-item-conf-input" placeholder="输入温度示值" v-model="company">
-                <template slot="prepend">温度示值：</template>
-              </el-input>
-            </el-col>
-            <el-col :span="5">
-              <el-input class="testEq-item-conf-input" placeholder="输入湿度示值" v-model="company">
-                <template slot="prepend">温度示值：</template>
-              </el-input>
-            </el-col>
-            <el-col :span="5">
-              <el-input class="testEq-item-conf-input" placeholder="输入中心点ID" v-model="company">
-                <template slot="prepend">中心点ID：</template>
-              </el-input>
-            </el-col>
-            <el-col :span="9">
-              <el-input class="testEq-item-conf-input" placeholder="输入传感器ID：1,2" v-model="company">
-                <template slot="prepend">传感器ID：</template>
-              </el-input>
-            </el-col>
-          </el-row>
-        </div>
-      </el-card>
+      <test-config-item 
+        v-for="(item,index) in testDeviceInfo"
+        :key="index"
+        :device="item.device"
+        :config="item.config"
+      /> 
     </div>
   </div>
 </template>
 
 <script>
+import TestConfigItem from './TestConfigItem'
+
 export default {
   name: 'test-config',
+  components: {
+    'test-config-item': TestConfigItem
+  },
   data() {
     return {
-    };
+      cycle: '',
+      testDeviceInfo: [
+        // {
+        //   device: {
+        //     company: '南京高华科技股份有限公司',
+        //     em: '南京高华',
+        //     deviceName: '温湿度传感器',
+        //     deviceType: '温湿度',
+        //     id: '01',
+        //   },
+        //   config: {
+        //     temp: '',
+        //     humi: '',
+        //     centerID: '',
+        //     IDS: ''
+        //   }
+        // }
+      ]
+    }
   },
 };
 </script>
@@ -148,14 +97,4 @@ export default {
   padding: 10px 10px 0 10px;
 }
 
-.testEq-item{
-  margin-bottom: 10px;
-}
-
-.testEq-item h4{
-  color: #707377;
-}
-.testEq-item-conf{
-  margin-top: 25px;
-}
 </style>

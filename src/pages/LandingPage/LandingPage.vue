@@ -5,6 +5,7 @@
         <el-card shadow="always" style="position:relative;">
           <span>设备管理页</span>
           <div class="landing-btns">
+            <!-- 搜索委托单位（测试设备）搜索框 -->
             <el-autocomplete
               v-model="state"
               :fetch-suggestions="querySearchAsync"
@@ -13,16 +14,15 @@
               :class="{searchEquipmentActive: isActiveSearch}"
               placeholder="请输入委托单位"
             ></el-autocomplete>
-
+            <!-- 已选择测试设备显示 badge -->
             <el-badge class="selectEqBtn" :value="5">
               <el-button @click="drawerSelectEq = true" size="small">已选择设备</el-button>
             </el-badge>
-
+            <!-- 新增测试设备按钮 -->
             <router-link to="/addEquipment">
               <el-button @click="addEquipmentClick()" class="add-equipment-btn" icon="el-icon-plus" type="text"></el-button>
             </router-link>
           </div>
-          
         </el-card>
 
         <el-table
@@ -117,27 +117,35 @@ export default {
       searchText: '',
       isActiveSearch: false,
       state: '',
-      timeout:  null,
-      testEqData: [
-      //   {
-      //   date: '2016-05-02 22:22',
-      //   em: '南京高华',
-      //   deviceName: '温度传感器',
-      //   deviceType: 'ew01',
-      //   id: '01',
-      //   value: '南京高华科技股份有限公司科技有限公司'
-      // }
-      ]
+      companys: [], // 所有委托单位
+      testEqData: []
     };
   },
   mounted() {
     this.getLatestFiveEq()
+    this.getAllCompanys()
   },
   methods: {
+    getAllCompanys() {
+      // 获取最近添加的五条测试设备信息
+      this.axios.get(this.util.testApi() + '/getAllCompanys')
+        .then(res => {
+          res.data.forEach((item) => {
+            item.value = item.company
+          })
+          this.companys = res.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     getLatestFiveEq() {
       // 获取最近添加的五条测试设备信息
       this.axios.get(this.util.testApi() + '/lastestFiveTestEq')
         .then(res => {
+          res.data.forEach((item) => {
+            item.value = item.company
+          })
           this.testEqData = res.data
         })
         .catch(err => {
@@ -187,16 +195,14 @@ export default {
       console.log(value)
     },
     handleSelect(item) {
+      // 从后端查询此委托单位下的所有测试设备，并展示给用户
       console.log(item)
     },
-    querySearchAsync(queryString, cb) {
-      var testEqData = this.testEqData;
-      var results = queryString ? testEqData.filter(this.createStateFilter(queryString)) : testEqData;
-
-      clearTimeout(this.timeout);
-      this.timeout = setTimeout(() => {
-        cb(results);
-      }, 3000 * Math.random());
+    querySearchAsync(queryString, callback) {
+      var companys = this.companys;
+      var results = queryString ? companys.filter(this.createStateFilter(queryString)) : companys;
+      
+      callback(results);
     },
     createStateFilter(queryString) {
       return (state) => {
