@@ -20,22 +20,22 @@
             </el-badge>
             <!-- 新增测试设备按钮 -->
             <router-link to="/addEquipment">
-              <el-button @click="addEquipmentClick()" class="add-equipment-btn" icon="el-icon-plus" type="text"></el-button>
+              <el-button @click="addEquipmentClick" class="add-equipment-btn" icon="el-icon-plus" type="text"></el-button>
             </router-link>
           </div>
         </el-card>
-
+        <!-- 已添加测试设备信息展示表格，表格分页，表格可根据委托单位进行自定义检索表内已有信息 -->
         <el-table
           ref="filterTable"
-          :data="testEqData"
+          :data="equipments"
           style="width: 100%; margin-top: 10px;">
           <el-table-column
-            prop="value"
+            prop="company"
             label="委托单位"
             min-width="180"
             :filters="[{text: '南京高华科技股份有限公司', value: '南京高华科技股份有限公司'}, {text: '南京高华科技股份有限公司科技有限公司', value: '南京高华科技股份有限公司科技有限公司'}]"
             :filter-method="filterHandler"
-            >
+          >
           </el-table-column>
           <el-table-column
             prop="deviceName"
@@ -48,7 +48,7 @@
             min-width="130">
           </el-table-column>
           <el-table-column
-            prop="id"
+            prop="deviceID"
             label="仪器编号"
             min-width="100">
           </el-table-column>
@@ -58,7 +58,7 @@
             min-width="180">
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="insertDate"
             label="日期"
             sortable
             min-width="130"
@@ -84,7 +84,7 @@
         </el-table>
       </el-col>
     </el-row>
-
+    <!-- 已选择测试设备展示区域 -->
     <el-drawer
         class="selectEq-container"
         :visible.sync="drawerSelectEq"
@@ -118,17 +118,33 @@ export default {
       isActiveSearch: false,
       state: '',
       companys: [], // 所有委托单位
-      testEqData: []
+      equipments: []
     };
   },
   mounted() {
     this.getLatestFiveEq()
-    this.getAllCompanys()
+    this.getLastestFiveCompanys()
   },
   methods: {
-    getAllCompanys() {
-      // 获取最近添加的五条测试设备信息
-      this.axios.get(this.util.testApi() + '/getAllCompanys')
+    getLastestFiveCompanys() {
+      // 获取所有测试设备信息
+      this.axios.get(this.util.testApi() + '/getLastestFiveCompanys')
+        .then(res => {
+          res.data.forEach((item) => {
+            item.value = item.company
+          })
+          this.companys = res.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getAllCompanys(companyKeyWords) {
+      if (companyKeyWords === '') {
+        return
+      }
+      // 获取所有名称包含指定关键字的委托单位
+      this.axios.post(this.util.testApi() + '/getAllCompanys', {company: companyKeyWords})
         .then(res => {
           res.data.forEach((item) => {
             item.value = item.company
@@ -143,10 +159,10 @@ export default {
       // 获取最近添加的五条测试设备信息
       this.axios.get(this.util.testApi() + '/lastestFiveTestEq')
         .then(res => {
-          res.data.forEach((item) => {
-            item.value = item.company
-          })
-          this.testEqData = res.data
+          // res.data.forEach((item) => {
+          //   item.value = item.company
+          // })
+          this.equipments = res.data
         })
         .catch(err => {
           console.log(err)
@@ -156,15 +172,15 @@ export default {
       return row.tag === value;
     },
     filterHandler(value, row, column) {
-      const property = column['property'];
-      return row[property] === value;
+      const property = column['property']
+      return row[property] === value
     },
     addEquipmentClick() {
       // 新增测试设备按钮，导航到新增测试设备页
     },
     handleDelete(index, row) {
       // 删除测试设备
-      console.log(index, row);
+      console.log(index, row)
       this.$confirm(`<strong>此操作将永久删除该测试设备,是否继续?</strong>`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -184,25 +200,30 @@ export default {
     },
     handleDuplicate(index, row) {
       // 以选择设备信息为模板，新增设备
-      console.log(index, row);
+      console.log(index, row)
       // 路由到新增设备页，用此行信息填充新增设备页输入框
     },
     handleAddToTest(index, row) {
       // 添加到选中测试设备
-      console.log(index, row);
+      console.log(index, row)
     },
     handleSearchTextChange(value) {
+      // 暂未使用
       console.log(value)
     },
     handleSelect(item) {
-      // 从后端查询此委托单位下的所有测试设备，并展示给用户
+      // 查询此委托单位下的所有测试设备，并展示给用户
       console.log(item)
     },
     querySearchAsync(queryString, callback) {
+      // 先更新所有匹配关键字的委托单位信息
+      this.getAllCompanys(this.searchText)
+      
+      // 前端执行检索匹配
       var companys = this.companys;
       var results = queryString ? companys.filter(this.createStateFilter(queryString)) : companys;
       
-      callback(results);
+      callback(results)
     },
     createStateFilter(queryString) {
       return (state) => {

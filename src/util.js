@@ -3,7 +3,7 @@ import moment from 'moment'
 
 function testApi() {
   return ''
-  // return 'https://0f587dce-5a0a-4458-abb7-012839c33dde.mock.pstmn.io'
+  // return 'https://cc14ca8b-dc40-46ff-8ac1-49a0f80fc3c7.mock.pstmn.io'
 }
 
 function nowtime() {

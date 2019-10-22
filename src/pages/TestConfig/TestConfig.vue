@@ -2,19 +2,37 @@
   <div class="test-config">
     <!-- 测试管理页头，工作周期输入框、控制按钮 -->
     <el-row style="margin-bottom:10px;">
-      <el-col class="header" :span="24">
+      <el-col :span="24">
         <el-card shadow="always">
-          <div class="header-input-container">
-            <span>测试管理页</span>
-            <el-input class="cycle-input" placeholder="请输入工作周期s" v-model="cycle">
-              <template slot="prepend">工作周期：</template>
-            </el-input>
-          </div>
-          <div class="header-control">
-            <el-button class="test-header-btn" type="success" round>一键配置</el-button>
-            <el-button class="test-header-btn" type="info" round>停止测试</el-button>
-            <el-button class="test-header-btn" type="success" round>启动测试</el-button>
-          </div>
+            <el-row :gutter="10">
+              <el-col :span="2"><span style="height:40px;line-height:40px;">测试管理页</span></el-col>
+              <el-col :span="6">
+                <el-input class="cycle-input" placeholder="请输入工作周期s" v-model="cycle">
+                  <template slot="prepend">工作周期：</template>
+                </el-input>
+              </el-col>
+              <el-col :span="7">
+                <el-switch class="cycle-switch"
+                  v-model="testTemplate.isSendding"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                  active-text="周期获取数据"
+                  inactive-text="仅监测数据">
+                </el-switch>
+              </el-col>
+              <el-col :span="3">
+                <el-button @click="setAllEquipment"
+                  class="test-header-btn" type="success" round>一键配置</el-button>
+              </el-col>
+              <el-col :span="3">
+                <el-button @click="stopTest" 
+                  class="test-header-btn" type="info" round>停止测试</el-button>
+              </el-col>
+              <el-col :span="3">
+                <el-button @click="startTest" 
+                  class="test-header-btn" type="success" round>启动测试</el-button>
+              </el-col>
+            </el-row>
         </el-card>
       </el-col>
     </el-row>
@@ -25,7 +43,7 @@
         :key="index"
         :device="item.device"
         :config="item.config"
-      /> 
+      />
     </div>
   </div>
 </template>
@@ -40,6 +58,9 @@ export default {
   },
   data() {
     return {
+      testTemplate: {
+        isSendding: true
+      },
       cycle: '',
       testDeviceInfo: [
         // {
@@ -60,6 +81,22 @@ export default {
       ]
     }
   },
+  methods: {
+    setAllEquipment() {
+      // 获取测试模板信息
+
+      // 使用预先配置的测试模板信息，一键配置所有测试设备的温度示值、湿度示值、工作周期信息
+
+    },
+    startTest() {
+      // 检查是否具备启动测试条件
+
+      // 给后台启动测试信号
+    },
+    stopTest() {
+      // 给后台停止测试信号
+    }
+  }
 };
 </script>
 
@@ -68,26 +105,10 @@ export default {
   padding: 10px 10px 0 10px;
 }
 
-.header{
-  position: relative;
-}
-.header-input-container{
-  display: inline-block;
-  width: 50%;
-}
-.cycle-input{
-  width: 50%;
-  margin-left: 35px;
-}
-.header-control{
-  position: absolute;
-  top: 22px;
-  left: 50%;
-  width: 50%;
-  text-align: right;
-}
-.test-header-btn{
-  margin-right: 25px;
+.cycle-switch{
+  display:inline-block;
+  padding-top: 10px;
+  padding-left: 20px;
 }
 
 .testEq-container{
@@ -96,5 +117,6 @@ export default {
   height: 72vh;
   padding: 10px 10px 0 10px;
 }
+
 
 </style>

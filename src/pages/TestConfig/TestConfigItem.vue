@@ -43,6 +43,7 @@ export default {
 .testEq-item h4{
   color: #707377;
 }
+
 .testEq-item-conf{
   margin-top: 25px;
 }
