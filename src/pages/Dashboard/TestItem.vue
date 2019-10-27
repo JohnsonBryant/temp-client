@@ -1,6 +1,6 @@
 <template>
     <el-card class="dash-test-item" shadow="always">
-    <h4>委托单位  --  设备厂家  --  设备名称  --  设备型号  --  设备编号</h4>
+    <h4>委托单位  --  仪器厂家  --  仪器名称  --  仪器型号  --  仪器编号</h4>
     <el-row :gutter="6">
       <el-col :span="18">
         <el-row :gutter="8">

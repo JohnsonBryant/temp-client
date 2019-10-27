@@ -36,7 +36,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <!-- 测试设备配置区块，展示所有测试设备配置信息 -->
+    <!-- 测试仪器配置区块，展示所有测试仪器配置信息 -->
     <div class="testEq-container">
       <test-config-item 
         v-for="(item,index) in testDeviceInfo"
@@ -85,7 +85,7 @@ export default {
     setAllEquipment() {
       // 获取测试模板信息
 
-      // 使用预先配置的测试模板信息，一键配置所有测试设备的温度示值、湿度示值、工作周期信息
+      // 使用预先配置的测试模板信息，一键配置所有测试仪器的温度示值、湿度示值、工作周期信息
 
     },
     startTest() {

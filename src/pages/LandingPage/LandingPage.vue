@@ -3,9 +3,9 @@
     <el-row style="margin-bottom:10px;">
       <el-col :span="24">
         <el-card shadow="always" style="position:relative;">
-          <span>设备管理页</span>
+          <span>仪器管理页</span>
           <div class="landing-btns">
-            <!-- 搜索委托单位（测试设备）搜索框 -->
+            <!-- 搜索委托单位（测试仪器）搜索框 -->
             <el-autocomplete
               v-model="state"
               :fetch-suggestions="querySearchAsync"
@@ -14,17 +14,17 @@
               :class="{searchEquipmentActive: isActiveSearch}"
               placeholder="请输入委托单位"
             ></el-autocomplete>
-            <!-- 已选择测试设备显示 badge -->
+            <!-- 已选择测试仪器显示 badge -->
             <el-badge class="selectEqBtn" :value="5">
-              <el-button @click="drawerSelectEq = true" size="small">已选择设备</el-button>
+              <el-button @click="drawerSelectEq = true" size="small">已选择仪器</el-button>
             </el-badge>
-            <!-- 新增测试设备按钮 -->
+            <!-- 新增测试仪器按钮 -->
             <router-link to="/addEquipment">
               <el-button @click="addEquipmentClick" class="add-equipment-btn" icon="el-icon-plus" type="text"></el-button>
             </router-link>
           </div>
         </el-card>
-        <!-- 已添加测试设备信息展示表格，表格分页，表格可根据委托单位进行自定义检索表内已有信息 -->
+        <!-- 已添加测试仪器信息展示表格，表格分页，表格可根据委托单位进行自定义检索表内已有信息 -->
         <el-table
           ref="filterTable"
           :data="equipments"
@@ -84,7 +84,7 @@
         </el-table>
       </el-col>
     </el-row>
-    <!-- 已选择测试设备展示区域 -->
+    <!-- 已选择测试仪器展示区域 -->
     <el-drawer
         class="selectEq-container"
         :visible.sync="drawerSelectEq"
@@ -94,13 +94,13 @@
         size="60%"
       >
       <div class="selectEq-title">
-        <el-divider content-position="center">已选择仪器设备</el-divider>
+        <el-divider content-position="center">已选择仪器仪器</el-divider>
       </div>
       <div class="selectEp-body">
 
       </div>
       <div class="selectEp-footer">
-        <el-button class="selectEp-footer-btn left" type="info" round>清空设备</el-button>
+        <el-button class="selectEp-footer-btn left" type="info" round>清空选择</el-button>
         <el-button class="selectEp-footer-btn right" type="success" round>进入测试</el-button>
       </div>
     </el-drawer>
@@ -127,7 +127,7 @@ export default {
   },
   methods: {
     getLastestFiveCompanys() {
-      // 获取所有测试设备信息
+      // 获取所有测试仪器信息
       this.axios.get(this.util.testApi() + '/getLastestFiveCompanys')
         .then(res => {
           res.data.forEach((item) => {
@@ -156,7 +156,7 @@ export default {
         })
     },
     getLatestFiveEq() {
-      // 获取最近添加的五条测试设备信息
+      // 获取最近添加的五条测试仪器信息
       this.axios.get(this.util.testApi() + '/lastestFiveTestEq')
         .then(res => {
           // res.data.forEach((item) => {
@@ -176,12 +176,12 @@ export default {
       return row[property] === value
     },
     addEquipmentClick() {
-      // 新增测试设备按钮，导航到新增测试设备页
+      // 新增测试仪器按钮，导航到新增测试仪器页
     },
     handleDelete(index, row) {
-      // 删除测试设备
+      // 删除测试仪器
       console.log(index, row)
-      this.$confirm(`<strong>此操作将永久删除该测试设备,是否继续?</strong>`, '提示', {
+      this.$confirm(`<strong>此操作将永久删除该测试仪器,是否继续?</strong>`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
@@ -199,12 +199,12 @@ export default {
         })
     },
     handleDuplicate(index, row) {
-      // 以选择设备信息为模板，新增设备
+      // 以选择仪器信息为模板，新增仪器
       console.log(index, row)
-      // 路由到新增设备页，用此行信息填充新增设备页输入框
+      // 路由到新增仪器页，用此行信息填充新增仪器页输入框
     },
     handleAddToTest(index, row) {
-      // 添加到选中测试设备
+      // 添加到选中测试仪器
       console.log(index, row)
     },
     handleSearchTextChange(value) {
@@ -212,7 +212,7 @@ export default {
       console.log(value)
     },
     handleSelect(item) {
-      // 查询此委托单位下的所有测试设备，并展示给用户
+      // 查询此委托单位下的所有测试仪器，并展示给用户
       console.log(item)
     },
     querySearchAsync(queryString, callback) {
