@@ -105,6 +105,18 @@ export default {
       rulesCompany: rulesCompany
     }
   },
+  mounted() {
+    // 如果是从设备管理页路由到本也，并传递了参数，即设备复制功能
+    if ('equipment' in this.$route.query) {
+      // 更新 info.equipmentInfo[0]
+      this.info.company = this.$route.query.equipment.company;
+      for (let key in this.$route.query.equipment) {
+        if (this.info.equipmentInfo[0].hasOwnProperty(key)) {
+          this.info.equipmentInfo[0][key] = this.$route.query.equipment[key];
+        }
+      }
+    }
+  },
   methods: {
     addEqInputItem() {
       this.info.equipmentInfo.push({em: '', deviceName: '', deviceType: '', deviceID: ''})
@@ -127,6 +139,7 @@ export default {
         if (valid) {
           // 输入的仪器不能存在完全相同
           if (!this.validateEquipmentInfo()) {
+            this.addMessage('请勿输入两组完全相同的仪器信息！请修改后重新提交！', 'warning');
             return;
           }
           // 打包已输入的仪器信息数组

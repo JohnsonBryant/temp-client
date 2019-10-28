@@ -15,7 +15,7 @@
               placeholder="请输入委托单位"
             ></el-autocomplete>
             <!-- 已选择测试仪器显示 badge -->
-            <el-badge class="selectEqBtn" :value="5">
+            <el-badge class="selectEqBtn" :value="selected.equipmentsSelected.length">
               <el-button @click="drawerSelectEq = true" size="small">已选择仪器</el-button>
             </el-badge>
             <!-- 新增测试仪器按钮 -->
@@ -97,11 +97,58 @@
         <el-divider content-position="center">已选择仪器仪器</el-divider>
       </div>
       <div class="selectEp-body">
-
+        <el-table
+          :data="selected.equipmentsSelected"
+          style="width: 100%; margin-top: 0px;">
+          <el-table-column
+            prop="company"
+            label="委托单位"
+            min-width="180"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="deviceName"
+            label="仪器名称"
+            min-width="150">
+          </el-table-column>
+          <el-table-column
+            prop="deviceType"
+            label="仪器型号"
+            min-width="130">
+          </el-table-column>
+          <el-table-column
+            prop="deviceID"
+            label="仪器编号"
+            min-width="100">
+          </el-table-column>
+          <el-table-column
+            prop="em"
+            label="仪器厂家"
+            min-width="180">
+          </el-table-column>
+          <el-table-column
+            prop="insertDate"
+            label="日期"
+            min-width="130"
+          >
+          </el-table-column>
+          <el-table-column label="操作"
+            min-width="120"
+          >
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="danger"
+                @click="deleteSelectedEquipment(scope.$index, scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>   
       </div>
       <div class="selectEp-footer">
-        <el-button class="selectEp-footer-btn left" type="info" round>清空选择</el-button>
-        <el-button class="selectEp-footer-btn right" type="success" round>进入测试</el-button>
+        <el-button class="selectEp-footer-btn left" type="info" round
+          @click="clearSelected">清空选择</el-button>
+        <el-button class="selectEp-footer-btn right" type="success" round
+          @click="routerToTest">进入测试</el-button>
       </div>
     </el-drawer>
   </div>
@@ -118,7 +165,10 @@ export default {
       isActiveSearch: false,
       state: '',
       companys: [], // 所有委托单位
-      equipments: []
+      equipments: [],
+      selected: {
+        equipmentsSelected: [],
+      }
     };
   },
   mounted() {
@@ -180,32 +230,29 @@ export default {
     },
     handleDelete(index, row) {
       // 删除测试仪器
-      console.log(index, row)
       this.$confirm(`<strong>此操作将永久删除该测试仪器,是否继续?</strong>`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
           dangerouslyUseHTMLString: true
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
+          this.addMessage('删除成功!', 'success');
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })          
-        })
+          this.addMessage('已取消删除');
+        });
     },
     handleDuplicate(index, row) {
       // 以选择仪器信息为模板，新增仪器
-      console.log(index, row)
-      // 路由到新增仪器页，用此行信息填充新增仪器页输入框
+      let equipmentString = `${row.company}-${row.em}-${row.deviceName}-${row.deviceType}-${row.deviceID}`;
+      this.addMessage('使用 "'+equipmentString+'" 为模板，新增设备！请修改当前信息后，提交！');
+      this.$router.push({ path: '/addEquipment', query: { equipment: row }});
     },
     handleAddToTest(index, row) {
       // 添加到选中测试仪器
-      console.log(index, row)
+      let equipmentsSelected = this.selected.equipmentsSelected;
+      if (equipmentsSelected.length === 0 || equipmentsSelected.indexOf(row) === -1) {
+        equipmentsSelected.push(row);
+      }
     },
     handleSearchTextChange(value) {
       // 暂未使用
@@ -229,6 +276,36 @@ export default {
       return (state) => {
         return (state.value.indexOf(queryString) === 0);
       };
+    },
+    clearSelected() {
+      // 清空已选择测试仪器
+      this.$confirm(`<strong>是否清空已选择仪器?</strong>`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          dangerouslyUseHTMLString: true
+        }).then(() => {
+          this.selected.equipmentsSelected.splice(0,this.selected.equipmentsSelected.length);
+          this.addMessage('已成功清空已选择仪器!', 'success');
+        }).catch(() => {
+          this.addMessage('已取消操作！');
+        });
+    },
+    deleteSelectedEquipment(index, row) {
+      let equipmentsSelected = this.selected.equipmentsSelected;
+      equipmentsSelected.splice(equipmentsSelected.indexOf(row), 1);
+    },
+    routerToTest() {
+      // 路由到测试管理页，将已选择设备信息转移到设备管理页
+      let equipmentsSelected = this.selected.equipmentsSelected;
+      this.addMessage('进入测试管理页，请配置测试信息，开始测试！');
+      this.$router.push({ path: '/testConfig', query: { equipments: equipmentsSelected }});
+    },
+    addMessage(message, messageType) {
+      this.$message({
+        message: message,
+        type: messageType ? messageType : 'info'
+      });
     },
   }
 };

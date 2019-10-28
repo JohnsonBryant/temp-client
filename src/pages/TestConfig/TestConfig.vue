@@ -38,6 +38,10 @@
     </el-row>
     <!-- 测试仪器配置区块，展示所有测试仪器配置信息 -->
     <div class="testEq-container">
+      <div v-if="!isActive">
+        <!-- 未处在测试状态，且不是从设备管理页路由并传递参数到本页时显示 -->
+        <h4>当前系统未处在测试状态，如需要进行测试，请切换到设备管理页，选择测试设备，启动测试！</h4>
+      </div>
       <test-config-item 
         v-for="(item,index) in testDeviceInfo"
         :key="index"
@@ -49,7 +53,8 @@
 </template>
 
 <script>
-import TestConfigItem from './TestConfigItem'
+import Vue from 'vue';
+import TestConfigItem from './TestConfigItem';
 
 export default {
   name: 'test-config',
@@ -58,43 +63,82 @@ export default {
   },
   data() {
     return {
+      isActive: false,
       testTemplate: {
+        cycle: '',
+        temp: '',
+        humi: '',
+        centerID: '',
+        IDS: '',
         isSendding: true
       },
       cycle: '',
-      testDeviceInfo: [
-        // {
-        //   device: {
-        //     company: '南京高华科技股份有限公司',
-        //     em: '南京高华',
-        //     deviceName: '温湿度传感器',
-        //     deviceType: '温湿度',
-        //     id: '01',
-        //   },
-        //   config: {
-        //     temp: '',
-        //     humi: '',
-        //     centerID: '',
-        //     IDS: ''
-        //   }
-        // }
-      ]
+      testDeviceInfo: []
+    }
+  },
+  beforeMount() {
+    // 获取测试模板信息，并初始化 data.testTemplate
+    this.axios.get(this.util.testApi() + '/testTemplate/get')
+      .then(res => {
+        this.setData(this.testTemplate, res.data);
+      })
+      .catch(err => {
+        // 失败处理
+        console.log(err);
+      });
+  },
+  mounted() {
+    if ('equipments' in this.$route.query) {
+      this.isActive = true;      
+      // 如果是从设备管理页路由到本也，并传递了参数，即启动测试功能
+      let equipments = this.$route.query.equipments;
+      equipments.forEach((equipment, index) => {
+        let testDevice = {
+          device: equipment,
+          config: {
+            temp: '',
+            humi: '',
+            centerID: '',
+            IDS: ''
+          }
+        };
+        this.testDeviceInfo.push(testDevice);
+      });
+    }
+    // else if () {
+      // 如果路由到本页时，未路由传参，需判断是否当前处于测试状态
+
+    // }
+    else {
+      // 路由到本页，未路由传参且不处于测试状态
+      this.isActive = false;
     }
   },
   methods: {
     setAllEquipment() {
-      // 获取测试模板信息
-
       // 使用预先配置的测试模板信息，一键配置所有测试仪器的温度示值、湿度示值、工作周期信息
-
+      let testTemplate = this.testTemplate;
+      this.cycle = this.testTemplate.cycle;
+      this.testDeviceInfo.forEach((testDevice, index) => {
+        testDevice.config.temp = testTemplate.temp;
+        testDevice.config.humi = testTemplate.humi;
+      });
     },
     startTest() {
       // 检查是否具备启动测试条件
 
-      // 给后台启动测试信号
+      // 给后台启动测试信号，所有测试设备信息传送到后端程序
+      
     },
     stopTest() {
       // 给后台停止测试信号
+    },
+    setData(originData, newData) {
+      Object.keys(newData).forEach((key) => {
+        if (originData.hasOwnProperty(key)) {
+          Vue.set(originData, key, newData[key])
+        }
+      })
     }
   }
 };

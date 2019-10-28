@@ -1,6 +1,6 @@
 <template>
 <el-card class="testEq-item" shadow="always">
-  <h4>{{device.company}}  --  {{device.em}}  --  {{device.deviceName}}  --  {{device.deviceType}}  --  {{device.id}}</h4>
+  <h4>{{device.company}}  --  {{device.em}}  --  {{device.deviceName}}  --  {{device.deviceType}}  --  {{device.deviceID}}</h4>
   <div class="testEq-item-conf">
     <el-row :gutter="20">
       <el-col :span="5">

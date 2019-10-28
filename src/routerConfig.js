@@ -28,15 +28,15 @@ const routerConfig = [
     component: TestConfig,
   },
   {
+    path: '/testConfig-*',
+    layout: HeaderAsideLayout,
+    component: TestConfig,
+  },
+  {
     path: '/dashboard',
     layout: HeaderAsideLayout,
     component: Dashboard,
   },
-  // {
-  //   path: '/history',
-  //   layout: HeaderAsideLayout,
-  //   component: History,
-  // },
   {
     path: '/workplace',
     layout: HeaderAsideLayout,
@@ -44,6 +44,11 @@ const routerConfig = [
   },
   {
     path: '/addEquipment',
+    layout: HeaderAsideLayout,
+    component: AddEquipment,
+  },
+  {
+    path: '/addEquipment-*',
     layout: HeaderAsideLayout,
     component: AddEquipment,
   },
