@@ -149,7 +149,6 @@ export default {
             item.insertDate = dnow
             return item
           })
-          console.log(equipmentInfo);
           //POST至后端新增测试仪器接口
           this.axios.post(this.util.testApi() + '/addEquipment', equipmentInfo)
             .then(res => {

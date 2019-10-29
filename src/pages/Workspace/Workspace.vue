@@ -106,7 +106,7 @@
                           <el-input class="testEq-item-conf-input" placeholder="输入湿度示值" v-model.trim="testTemplate.humi">
                             <template slot="prepend">温度示值：</template>
                           </el-input>
-                        </el-form-item>                      
+                        </el-form-item>                
                       </el-col>
                     </el-row>
                   </div>
@@ -137,10 +137,7 @@
                           </el-input>
                         </el-form-item>
                       </el-col>
-                      <el-col :span="10"
-                        style="padding-top: 10px;border: 1px solid #dfdfdf;border-radius: 5px;height: 40px;
-background-color: #F5F7FA;"
-                      >
+                      <el-col :span="10" style="padding-top: 10px;border: 1px solid #dfdfdf;border-radius: 5px;height: 40px; background-color: #F5F7FA;">
                         <el-form-item prop="isSendding">
                           <el-switch
                             style="display: block"
@@ -151,7 +148,7 @@ background-color: #F5F7FA;"
                             inactive-text="仅监测数据">
                           </el-switch>
                         </el-form-item>
-                      </el-col>                      
+                      </el-col>                  
                     </el-row>
                     <div class="wk-template-btns">
                       <el-button @click="handletestTemplateSaveClick" type="primary">保存测试模板<i class="el-icon-check el-icon--right"></i></el-button>
