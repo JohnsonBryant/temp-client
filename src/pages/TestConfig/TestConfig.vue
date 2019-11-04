@@ -38,7 +38,7 @@
     </el-row>
     <!-- 测试仪器配置区块，展示所有测试仪器配置信息 -->
     <div class="testEq-container">
-      <div v-if="!isActive">
+      <div v-if="!isOnTest">
         <!-- 未处在测试状态，且不是从设备管理页路由并传递参数到本页时显示 -->
         <h4>当前系统未处在测试状态，如需要进行测试，请切换到设备管理页，选择测试设备，启动测试！</h4>
       </div>
@@ -63,7 +63,26 @@ export default {
   },
   data() {
     return {
-      isActive: false,
+      isOnTest: false,
+      cycle: '',
+      isSendding: false,
+      testDeviceInfo: [
+        // {
+        //   device: {
+        //     company: '',
+        //     em: '',
+        //     deviceName: '',
+        //     deviceType: '',
+        //     deviceID: '',
+        //   },
+        //   config: {
+        //     temp: '',
+        //     humi: '',
+        //     centerID: '',
+        //     IDS: '',
+        //   }
+        // }
+      ],
       testTemplate: {
         cycle: '',
         temp: '',
@@ -72,8 +91,6 @@ export default {
         IDS: '',
         isSendding: true
       },
-      cycle: '',
-      testDeviceInfo: []
     }
   },
   beforeMount() {
@@ -89,7 +106,7 @@ export default {
   },
   mounted() {
     if ('equipments' in this.$route.query) {
-      this.isActive = true;      
+      this.isOnTest = true;      
       // 如果是从设备管理页路由到本也，并传递了参数，即启动测试功能
       let equipments = this.$route.query.equipments;
       equipments.forEach((equipment, index) => {
@@ -111,7 +128,7 @@ export default {
     // }
     else {
       // 路由到本页，未路由传参且不处于测试状态
-      this.isActive = false;
+      this.isOnTest = false;
     }
   },
   methods: {
@@ -119,6 +136,7 @@ export default {
       // 使用预先配置的测试模板信息，一键配置所有测试仪器的温度示值、湿度示值、工作周期信息
       let testTemplate = this.testTemplate;
       this.cycle = this.testTemplate.cycle;
+      this.isSendding = this.testTemplate.isSendding;
       this.testDeviceInfo.forEach((testDevice, index) => {
         testDevice.config.temp = testTemplate.temp;
         testDevice.config.humi = testTemplate.humi;
