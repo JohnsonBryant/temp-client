@@ -11,8 +11,23 @@
 export default {
   name: 'AppMain',
   sockets:{
-    dataMsg: function(pack){
-      console.log(pack)
+    connectMsg (pack) {
+      console.log(pack);
+    },
+    dataMsg (pack) {
+      console.log(pack);
+    },
+    directiveStartTest (pack) {
+      console.log(pack);
+    },
+    directiveStopTest (pack) {
+      console.log(pack);
+    },
+    directiveModifyID (pack) {
+      console.log(pack);
+    },
+    directiveSearchSensors (pack) {
+      console.log(pack);
     },
   },
 };

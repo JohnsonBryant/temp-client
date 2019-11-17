@@ -11,6 +11,7 @@ import 'echarts/lib/chart/bar'
 import 'echarts/lib/component/tooltip'
 import 'echarts-gl'
 import router from './router';
+import store from './store.js';
 import util from './util.js'
 import App from './App.vue';
 
@@ -28,5 +29,6 @@ Vue.prototype.util = util //自定义功能函数添加到 Vue 原型中
 
 let vm = new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app');

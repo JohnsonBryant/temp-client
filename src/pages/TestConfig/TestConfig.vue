@@ -147,9 +147,14 @@ export default {
 
       // 给后台启动测试信号，所有测试设备信息传送到后端程序
       
+      // 更新 store.state
+      this.$store.commit('startTest');
     },
     stopTest() {
       // 给后台停止测试信号
+
+      // 更新 store.state
+      this.$store.commit('stopTest');
     },
     setData(originData, newData) {
       Object.keys(newData).forEach((key) => {
