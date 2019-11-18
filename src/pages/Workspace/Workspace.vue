@@ -104,7 +104,7 @@
                       <el-col :span="10">
                         <el-form-item prop="humi">
                           <el-input class="testEq-item-conf-input" placeholder="输入湿度示值" v-model.trim="testTemplate.humi">
-                            <template slot="prepend">温度示值：</template>
+                            <template slot="prepend">湿度示值：</template>
                           </el-input>
                         </el-form-item>                
                       </el-col>
@@ -259,7 +259,7 @@ export default {
               BaudRate: this.SerialPort.BaudRate
             })
             .then(res => {
-              if (res.data.isSuccessed) {
+              if (res.data.isSuccess) {
                 this.addMessage('串口参数修改成功', 'success')
               } else {
                 this.addMessage('串口参数修改失败，请按F5刷新后重新尝试！', 'warning')
@@ -280,7 +280,7 @@ export default {
               BatteryHigh: this.Battery.BatteryHigh
             })
             .then(res => {
-              if (res.data.isSuccessed) {
+              if (res.data.isSuccess) {
                 this.addMessage('电池参数修改成功', 'success')
               } else {
                 this.addMessage('电池参数修改失败，请按F5刷新后重新尝试！', 'warning')
@@ -301,14 +301,13 @@ export default {
               newID: this.idSetting.newID
             })
             .then(res => {
-              if (res.data.isSuccessed) {
-                this.addMessage('修改传感器ID发送成功', 'success')
-              } else {
-                this.addMessage('修改传感器ID发送失败，请按F5刷新后重新尝试！', 'warning')
-              }
+              let result = res.data;
+              let type = result.isSuccess ? 'success' : 'warning';
+              let message = result.message;
+              this.addMessage(message, type);
             })
             .catch(err => {
-              console.log(err)
+              this.addMessage('异常错误，请刷新后重试！', 'warning');
             })
         }
       })
@@ -317,7 +316,7 @@ export default {
       // 搜索传感器命令发送
       this.axios.get(this.util.testApi() + '/searchSensor')
         .then(res => {
-          if (res.data.isSuccessed) {
+          if (res.data.isSuccess) {
             this.showSearchSencor('搜索传感器发送成功，1,2,3,4,5,6,7,8,9,10,12,11,13,14,15,16,17，18', 'success')
           } else {
             this.showSearchSencor('搜索传感器发送失败，请按F5刷新后重新尝试！', 'warning')
@@ -340,7 +339,7 @@ export default {
               isSendding: this.testTemplate.isSendding,
             })
             .then(res => {
-              if (res.data.isSuccessed) {
+              if (res.data.isSuccess) {
                 this.addMessage('测试模板保存成功', 'success')
               } else {
                 this.addMessage('测试模板保存失败，请按F5刷新后重新尝试！', 'warning')

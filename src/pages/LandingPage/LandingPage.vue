@@ -209,9 +209,6 @@ export default {
       // 获取最近添加的五条测试仪器信息
       this.axios.get(this.util.testApi() + '/lastestFiveTestEq')
         .then(res => {
-          // res.data.forEach((item) => {
-          //   item.value = item.company
-          // })
           this.equipments = res.data
         })
         .catch(err => {
@@ -229,6 +226,7 @@ export default {
       // 新增测试仪器按钮，导航到新增测试仪器页
     },
     handleDelete(index, row) {
+      console.log(row);
       // 删除测试仪器
       this.$confirm(`<strong>此操作将永久删除该测试仪器,是否继续?</strong>`, '提示', {
           confirmButtonText: '确定',
@@ -236,7 +234,17 @@ export default {
           type: 'warning',
           dangerouslyUseHTMLString: true
         }).then(() => {
-          this.addMessage('删除成功!', 'success');
+          // 向删除设备接口发起请求
+          this.axios.post(this.util.testApi() + '/deleteEquipment', row)
+            .then(res => {
+              let result = res.data;
+              let type = result.isSuccess ? 'success' : 'warning';
+              let messgae = result.message;
+              this.addMessage(messgae, type);
+            })
+            .catch(err => {
+              this.addMessage('异常错误，请刷新后检查是否成功删除!', 'warning');
+            });
         }).catch(() => {
           this.addMessage('已取消删除');
         });

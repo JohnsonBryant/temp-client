@@ -152,7 +152,7 @@ export default {
           //POST至后端新增测试仪器接口
           this.axios.post(this.util.testApi() + '/addEquipment', equipmentInfo)
             .then(res => {
-              if (res.data.isSuccessed) {
+              if (res.data.isSuccess) {
                 this.addMessage('仪器新增成功！', 'success');
               } else {
                 this.addMessage('仪器新增失败！', 'warning');
