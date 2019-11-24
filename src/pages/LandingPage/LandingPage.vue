@@ -15,7 +15,7 @@
               placeholder="请输入委托单位"
             ></el-autocomplete>
             <!-- 已选择测试仪器显示 badge -->
-            <el-badge class="selectEqBtn" :value="selected.equipmentsSelected.length">
+            <el-badge class="selectEqBtn" :value="selectedEquipmentCount">
               <el-button @click="drawerSelectEq = true" size="small">已选择仪器</el-button>
             </el-badge>
             <!-- 新增测试仪器按钮 -->
@@ -71,7 +71,7 @@
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                @click="handleAddToTest(scope.$index, scope.row)">添加</el-button>
+                @click="handleAddToTest(scope.$index, scope.row)">选择</el-button>
               <el-button
                 size="mini"
                 @click="handleDuplicate(scope.$index, scope.row)">复制</el-button>
@@ -98,7 +98,7 @@
       </div>
       <div class="selectEp-body">
         <el-table
-          :data="selected.equipmentsSelected"
+          :data="this.$store.state.selectedEquipments"
           style="width: 100%; margin-top: 0px;">
           <el-table-column
             prop="company"
@@ -159,21 +159,28 @@ export default {
   name: 'landing-page',
   data() {
     return {
+      // 控制已选中测试仪器的下拉抽屉的显示
       drawerSelectEq: false,
       directionSelectEq: 'ttb',
+      // 测试仪器检索搜索框相关
       searchText: '',
       isActiveSearch: false,
       state: '',
       companys: [], // 所有委托单位
+      // 后端获取的测试仪器数据， 用于用户操作， 选择、复制、删除
       equipments: [],
-      selected: {
-        equipmentsSelected: [],
-      }
+      // 存储用户已选择的测试仪器， 用于测试准备的确认， 及作为测试仪器配置前的， 最终本次测试使用的测试仪器的数据源
+      equipmentsSelected: [],
     };
   },
   mounted() {
     this.getLatestFiveEq()
     this.getLastestFiveCompanys()
+  },
+  computed: {
+    selectedEquipmentCount () {
+      return this.$store.state.selectedEquipments.length;
+    },
   },
   methods: {
     getLastestFiveCompanys() {
@@ -226,7 +233,6 @@ export default {
       // 新增测试仪器按钮，导航到新增测试仪器页
     },
     handleDelete(index, row) {
-      console.log(row);
       // 删除测试仪器
       this.$confirm(`<strong>此操作将永久删除该测试仪器,是否继续?</strong>`, '提示', {
           confirmButtonText: '确定',
@@ -255,13 +261,6 @@ export default {
       this.addMessage('使用 "'+equipmentString+'" 为模板，新增设备！请修改当前信息后，提交！');
       this.$router.push({ path: '/addEquipment', query: { equipment: row }});
     },
-    handleAddToTest(index, row) {
-      // 添加到选中测试仪器
-      let equipmentsSelected = this.selected.equipmentsSelected;
-      if (equipmentsSelected.length === 0 || equipmentsSelected.indexOf(row) === -1) {
-        equipmentsSelected.push(row);
-      }
-    },
     handleSearchTextChange(value) {
       // 暂未使用
       console.log(value)
@@ -286,28 +285,43 @@ export default {
       };
     },
     clearSelected() {
+      // 检查已选择测试设备是否为0
+      if (this.$store.state.selectedEquipments.length === 0) {
+        return;
+      }
       // 清空已选择测试仪器
       this.$confirm(`<strong>是否清空已选择仪器?</strong>`, '提示', {
-          confirmButtonText: '确定',
+        confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
           dangerouslyUseHTMLString: true
         }).then(() => {
-          this.selected.equipmentsSelected.splice(0,this.selected.equipmentsSelected.length);
+          this.$store.commit('clearAllSelectedEquipments');
           this.addMessage('已成功清空已选择仪器!', 'success');
         }).catch(() => {
           this.addMessage('已取消操作！');
         });
     },
+    handleAddToTest(index, row) {
+      // 添加到选中测试仪器
+      this.$store.commit('addToSelectedEquipments', row);
+    },
     deleteSelectedEquipment(index, row) {
-      let equipmentsSelected = this.selected.equipmentsSelected;
-      equipmentsSelected.splice(equipmentsSelected.indexOf(row), 1);
+      // 从当前选择测试仪器中删除某个仪器
+      this.$store.commit('dropFromSelectedEquipments', row);
     },
     routerToTest() {
-      // 路由到测试管理页，将已选择设备信息转移到设备管理页
       let equipmentsSelected = this.selected.equipmentsSelected;
+      // 检查已选择测试设备是否为0
+      if (equipmentsSelected.length === 0) {
+        this.addMessage('当前未选择测试仪器，请选择测试仪器后再尝试进入测试！', 'warning');
+        return;
+      }
+      // 路由到测试管理页，将已选择设备信息转移到设备管理页
       this.addMessage('进入测试管理页，请配置测试信息，开始测试！');
-      this.$router.push({ path: '/testConfig', query: { equipments: equipmentsSelected }});
+
+      this.$router.push({ path: '/testConfig'});
+      // this.$router.push({ path: '/testConfig', query: { equipments: equipmentsSelected }});
     },
     addMessage(message, messageType) {
       this.$message({
