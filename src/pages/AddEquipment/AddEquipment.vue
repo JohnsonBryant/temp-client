@@ -11,10 +11,15 @@
                   <el-input class="company-input" placeholder="请输入委托单位名称" v-model="info.company">
                     <template slot="prepend">委托单位：</template>
                   </el-input>
-                </el-form-item>                
-                <el-button class="submit-btn" type="success" icon="el-icon-check" round
-                  @click="submitAddEquipment"
-                >提交</el-button>
+                </el-form-item>
+                <div class="submit-btns">
+                  <el-button class="submit-btn" type="success" icon="el-icon-back" round
+                    @click="goBackToLandingPage"
+                  >返回</el-button>
+                  <el-button class="submit-btn" type="success" icon="el-icon-check" round
+                    @click="submitAddEquipment"
+                  >提交</el-button>
+                </div>
               </div>
               <el-divider content-position="center">仪器信息</el-divider>
               <!-- 新增仪器主体区块 -->
@@ -124,6 +129,9 @@ export default {
     deleteEqInputItem() {
       this.info.equipmentInfo.pop({em: '', deviceName: '', deviceType: '', deviceID: ''})
     },
+    goBackToLandingPage () {
+      this.$router.push({path: '/landingPage'});
+    },
     submitAddEquipment() {
       // 所有单个仪器信息输入区的信息检查，如果检查失败，则不再继续执行后续操作
       // let len = this.info.equipmentInfo.length;
@@ -209,10 +217,14 @@ export default {
   width: 43%;
 }
 
-.add-equip-header .submit-btn{
+.add-equip-header .submit-btns{
   position: absolute;
   top: 8px;
   right: 86px;
+}
+
+.add-equip-header .submit-btns .submit-btn{
+  margin-left: 25px;
 }
 
 .add-equip-body {

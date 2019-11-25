@@ -17,20 +17,20 @@
                       <el-row :gutter="10">
                         <el-col :span="10">
                           <el-form-item prop="SerialPortName">
-                            <el-input placeholder="输入串口号" v-model.trim="SerialPort.SerialPortName">
+                            <el-input placeholder="输入串口号" v-model.trim="SerialPort.SerialPortName" :disabled="controlEnabled">
                               <template slot="prepend">串口号：</template>
                             </el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="10">
                           <el-form-item prop="BaudRate">
-                            <el-input placeholder="输入波特率" v-model.trim.number="SerialPort.BaudRate">
+                            <el-input placeholder="输入波特率" v-model.trim.number="SerialPort.BaudRate" :disabled="controlEnabled">
                               <template slot="prepend">波特率：</template>
                             </el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="4">
-                          <el-button @click="handlePortSetClick" type="primary">提交<i class="el-icon-check el-icon--right"></i></el-button>
+                          <el-button @click="handlePortSetClick" type="primary" :disabled="controlEnabled">提交<i class="el-icon-check el-icon--right"></i></el-button>
                         </el-col>
                       </el-row>
                     </el-form>
@@ -40,20 +40,20 @@
                       <el-row :gutter="10">
                         <el-col :span="10">
                           <el-form-item prop="BatteryLow">
-                            <el-input placeholder="输入最低电压" v-model.trim="Battery.BatteryLow">
+                            <el-input placeholder="输入最低电压" v-model.trim="Battery.BatteryLow" :disabled="controlEnabled">
                               <template slot="prepend">最低电压：</template>
                             </el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="10">
                           <el-form-item prop="BatteryHigh">
-                            <el-input placeholder="输入最高电压" v-model.trim="Battery.BatteryHigh">
+                            <el-input placeholder="输入最高电压" v-model.trim="Battery.BatteryHigh" :disabled="controlEnabled">
                               <template slot="prepend">最高电压：</template>
                             </el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="4">
-                          <el-button @click="handleBatterySetClick" type="primary">提交<i class="el-icon-check el-icon--right"></i></el-button>
+                          <el-button @click="handleBatterySetClick" type="primary" :disabled="controlEnabled">提交<i class="el-icon-check el-icon--right"></i></el-button>
                         </el-col>                      
                       </el-row>
                     </el-form>
@@ -63,26 +63,29 @@
                       <el-row :gutter="10">
                         <el-col :span="10">
                           <el-form-item prop="originID">
-                            <el-input placeholder="输入原始ID" v-model.trim.number="idSetting.originID">
+                            <el-input placeholder="输入原始ID" v-model.trim.number="idSetting.originID" :disabled="controlEnabled">
                               <template slot="prepend">原始ID：</template>
                             </el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="10">
                           <el-form-item prop="newID">
-                            <el-input placeholder="输入新设ID" v-model.trim.number="idSetting.newID">
+                            <el-input placeholder="输入新设ID" v-model.trim.number="idSetting.newID" :disabled="controlEnabled">
                               <template slot="prepend">新设ID：</template>
                             </el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="4">
-                          <el-button @click="handleIDSetClick" type="primary">提交<i class="el-icon-check el-icon--right"></i></el-button>
+                          <el-button @click="handleIDSetClick" type="primary" :disabled="controlEnabled">提交<i class="el-icon-check el-icon--right"></i></el-button>
                         </el-col>
                       </el-row>
                     </el-form>
                     <div class="wk-item-search-sensor">
-                      <el-button @click="handleSerachSensorClick" type="success">搜索传感器<i class="el-icon-check el-icon--right"></i></el-button>
-                    </div>                    
+                      <el-button @click="handleSerachSensorClick" type="success" :disabled="controlEnabled">搜索传感器<i class="el-icon-check el-icon--right"></i></el-button>
+                      <div class="wk-item-search-sensor-container">
+                        <span class="searched-sensor-item" v-for="(sensorID) in searchedSensorIDs" :key="sensorID">{{ sensorID }}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </el-card>
@@ -95,33 +98,33 @@
                   <div class="wk-item-pie">
                     <el-row :gutter="10">
                       <el-col :span="10">
-                        <el-form-item prop="temp">
-                          <el-input class="testEq-item-conf-input" placeholder="输入温度示值" v-model.trim="testTemplate.temp">
-                            <template slot="prepend">温度示值：</template>
+                        <el-form-item prop="cycle">
+                          <el-input class="cycle-input" placeholder="请输入工作周期s" v-model.trim="testTemplate.cycle" :disabled="controlEnabled">
+                            <template slot="prepend">工作周期(s/秒)：</template>
                           </el-input>
                         </el-form-item>
                       </el-col>
                       <el-col :span="10">
-                        <el-form-item prop="humi">
-                          <el-input class="testEq-item-conf-input" placeholder="输入湿度示值" v-model.trim="testTemplate.humi">
-                            <template slot="prepend">湿度示值：</template>
+                        <el-form-item prop="centerID">
+                          <el-input class="testEq-item-conf-input" placeholder="输入中心点ID" v-model.trim="testTemplate.centerID" :disabled="controlEnabled">
+                            <template slot="prepend">中心点ID：</template>
                           </el-input>
-                        </el-form-item>                
+                        </el-form-item>                      
                       </el-col>
                     </el-row>
                   </div>
                   <div class="wk-item-pie">
                     <el-row :gutter="10">
                       <el-col :span="10">
-                        <el-form-item prop="centerID">
-                          <el-input class="testEq-item-conf-input" placeholder="输入中心点ID" v-model.trim="testTemplate.centerID">
-                            <template slot="prepend">中心点ID：</template>
+                        <el-form-item prop="temp">
+                          <el-input class="testEq-item-conf-input" placeholder="输入温度示值" v-model.trim="testTemplate.temp" :disabled="controlEnabled">
+                            <template slot="prepend">温度示值(℃)：</template>
                           </el-input>
-                        </el-form-item>                      
+                        </el-form-item>
                       </el-col>
                       <el-col :span="10">
                         <el-form-item prop="IDS">
-                          <el-input class="testEq-item-conf-input" placeholder="输入传感器ID：1,2" v-model.trim="testTemplate.IDS">
+                          <el-input class="testEq-item-conf-input" placeholder="输入传感器ID：1,2" v-model.trim="testTemplate.IDS" :disabled="controlEnabled">
                             <template slot="prepend">传感器ID：</template>
                           </el-input>
                         </el-form-item>                      
@@ -131,11 +134,11 @@
                   <div class="wk-item-pie">
                     <el-row :gutter="10">
                       <el-col :span="10">
-                        <el-form-item prop="cycle">
-                          <el-input class="cycle-input" placeholder="请输入工作周期s" v-model.trim="testTemplate.cycle">
-                            <template slot="prepend">工作周期：</template>
+                        <el-form-item prop="humi">
+                          <el-input class="testEq-item-conf-input" placeholder="输入湿度示值" v-model.trim="testTemplate.humi" :disabled="controlEnabled">
+                            <template slot="prepend">湿度示值(%RH)：</template>
                           </el-input>
-                        </el-form-item>
+                        </el-form-item>                
                       </el-col>
                       <el-col :span="10" style="padding-top: 10px;border: 1px solid #dfdfdf;border-radius: 5px;height: 40px; background-color: #F5F7FA;">
                         <el-form-item prop="isSendding">
@@ -145,13 +148,14 @@
                             active-color="#13ce66"
                             inactive-color="#ff4949"
                             active-text="周期获取数据"
-                            inactive-text="仅监测数据">
+                            inactive-text="仅监测数据"
+                            :disabled="controlEnabled">
                           </el-switch>
                         </el-form-item>
                       </el-col>                  
                     </el-row>
                     <div class="wk-template-btns">
-                      <el-button @click="handletestTemplateSaveClick" type="primary">保存测试模板<i class="el-icon-check el-icon--right"></i></el-button>
+                      <el-button @click="handletestTemplateSaveClick" type="primary" :disabled="controlEnabled">保存测试模板<i class="el-icon-check el-icon--right"></i></el-button>
                     </div>
                   </div>
                 </el-form>
@@ -179,8 +183,8 @@ let rules = {
   },
   Battery: {
     BatteryLow: [
-        { required: true, message: '请输入电量值', trigger: 'change' }
-      ],
+      { required: true, message: '请输入电量值', trigger: 'change' }
+    ],
     BatteryHigh: [
       { required: true, message: '请输入电量值', trigger: 'change' }
     ],
@@ -226,7 +230,7 @@ export default {
       },
       Battery: {
         BatteryLow: '',
-        BatteryHigh: ''
+        BatteryHigh: '',
       },
       idSetting: {
         originID: '',
@@ -244,6 +248,7 @@ export default {
       rulesBattery: rules.Battery,
       rulesidSetting: rules.idSetting,
       rulestestTemplate: rules.testTemplate,
+      searchedSensorIDs: [1, 2, 3, 4, 5, 6], // 存储搜索传感器功能搜索到的传感器ID
     }
   },
   mounted() {
@@ -256,17 +261,13 @@ export default {
           // 串口参数修改数据提交处理函数
           this.axios.post(this.util.testApi() + '/serialportConf/set', {
               SerialPortName: this.SerialPort.SerialPortName,
-              BaudRate: this.SerialPort.BaudRate
+              BaudRate: parseInt(this.SerialPort.BaudRate),
             })
             .then(res => {
-              if (res.data.isSuccess) {
-                this.addMessage('串口参数修改成功', 'success')
-              } else {
-                this.addMessage('串口参数修改失败，请按F5刷新后重新尝试！', 'warning')
-              }
+              this.showAjaxRequestMessage(res.data);
             })
             .catch(err => {
-              console.log(err)
+              this.addMessage('异常错误，请刷新后重试！', 'warning');
             })
         }
       })
@@ -276,18 +277,14 @@ export default {
         if (valid) {
           // 电池参数修改数据提交处理函数
           this.axios.post(this.util.testApi() + '/batteryConf/set', {
-              BatteryLow: this.Battery.BatteryLow,
-              BatteryHigh: this.Battery.BatteryHigh
+              BatteryLow: parseFloat(this.Battery.BatteryLow),
+              BatteryHigh: parseFloat(this.Battery.BatteryHigh),
             })
             .then(res => {
-              if (res.data.isSuccess) {
-                this.addMessage('电池参数修改成功', 'success')
-              } else {
-                this.addMessage('电池参数修改失败，请按F5刷新后重新尝试！', 'warning')
-              }
+              this.showAjaxRequestMessage(res.data);
             })
             .catch(err => {
-              console.log(err)
+              this.addMessage('异常错误，请刷新后重试！', 'warning');
             })
         }
       })
@@ -301,10 +298,7 @@ export default {
               newID: this.idSetting.newID
             })
             .then(res => {
-              let result = res.data;
-              let type = result.isSuccess ? 'success' : 'warning';
-              let message = result.message;
-              this.addMessage(message, type);
+              this.showAjaxRequestMessage(res.data);
             })
             .catch(err => {
               this.addMessage('异常错误，请刷新后重试！', 'warning');
@@ -313,40 +307,44 @@ export default {
       })
     },
     handleSerachSensorClick() {
+      // 重置当前缓存 搜索传感器ID的变量
+      const searchedSensorIDs = this.searchedSensorIDs;
+      if (searchedSensorIDs.length !== 0) {
+        this.searchedSensorIDs.splice(0, this.searchedSensorIDs.length);
+      }
       // 搜索传感器命令发送
       this.axios.get(this.util.testApi() + '/searchSensor')
         .then(res => {
-          if (res.data.isSuccess) {
-            this.showSearchSencor('搜索传感器发送成功，1,2,3,4,5,6,7,8,9,10,12,11,13,14,15,16,17，18', 'success')
-          } else {
-            this.showSearchSencor('搜索传感器发送失败，请按F5刷新后重新尝试！', 'warning')
-          }
+          this.showAjaxRequestMessage(res.data);
         })
         .catch(err => {
-          console.log(err)
+          this.addMessage('异常错误，请刷新后重试！', 'warning');
         })
     },
     handletestTemplateSaveClick() {
       this.$refs['testTemplate'].validate((valid) => {
         if (valid) {
+          const testTemplate = this.testTemplate;
+          // 检查IDS中是否包含非法字符
+          if (/[^\d,，]/.test(testTemplate.IDS)) {
+            this.addMessage('输入的其他传感器ID中包含非法字符，只允许输入整数的传感器ID，且以 "," 隔开！', 'warning');
+            return;
+          }
+          let IDS = testTemplate.IDS.split(',').map(id => parseInt(id));
           // 测试模板修改提交处理函数
           this.axios.post(this.util.testApi() + '/testTemplate/set', {
-              cycle: this.testTemplate.cycle,
-              temp: this.testTemplate.temp,
-              humi: this.testTemplate.humi,
-              centerID: this.testTemplate.centerID,
-              IDS: this.testTemplate.IDS,
-              isSendding: this.testTemplate.isSendding,
+              cycle: parseInt(testTemplate.cycle),
+              temp: parseFloat(testTemplate.temp),
+              humi: parseFloat(testTemplate.humi),
+              centerID: parseInt(testTemplate.centerID),
+              IDS: IDS,
+              isSendding: testTemplate.isSendding,
             })
             .then(res => {
-              if (res.data.isSuccess) {
-                this.addMessage('测试模板保存成功', 'success')
-              } else {
-                this.addMessage('测试模板保存失败，请按F5刷新后重新尝试！', 'warning')
-              }
+              this.showAjaxRequestMessage(res.data);
             })
             .catch(err => {
-              console.log(err)
+              this.addMessage('异常错误，请刷新后重试！', 'warning');
             })
         }
       })      
@@ -355,48 +353,58 @@ export default {
       // 获取当前程序配置信息，并初始化 data.config
       this.axios.get(this.util.testApi() + '/config/get')
         .then(res => {
-          this.setData(this.SerialPort, res.data)
-          this.setData(this.Battery, res.data)
+          this.setData(this.SerialPort, res.data);
+          this.setData(this.Battery, res.data);
         })
         .catch(err => {
           // 失败处理
-          console.log(err)
+          console.log(err);
         })
       // 获取当前测试模板信息，并初始化 data.testTemplate
       this.axios.get(this.util.testApi() + '/testTemplate/get')
         .then(res => {
-          this.setData(this.testTemplate, res.data)
+          this.setData(this.testTemplate, res.data);
         })
         .catch(err => {
           // 失败处理
-          console.log(err)    
+          this.addMessage('异常错误，请刷新后重试！', 'warning');
         })
     },
     setData(originData, newData) {
       Object.keys(newData).forEach((key) => {
         if (originData.hasOwnProperty(key)) {
-          Vue.set(originData, key, newData[key])
+          Vue.set(originData, key, newData[key]);
         }
-      })
+      });
+    },
+    showAjaxRequestMessage (result) {
+      let type = result.isSuccess ? 'success' : 'warning';
+      let message = result.message;
+      this.addMessage(message, type);
     },
     addMessage(message, messageType) {
       this.$message({
         message: message,
         type: messageType
-      })
+      });
     },
-    showSearchSencor(message, messageType) {
-      this.$message({
-        message: message,
-        type: messageType,
-        duration: 10000,
-        // showClose: true
-      })
-    }
+  },
+  computed: {
+    controlEnabled () {
+      // 返回当前系统是否在测试状态的真值， 控制控件的可用状态
+      return this.$store.state.isOnTest;
+    },
   },
   sockets:{
-    dataMsg: function(pack){
-      console.log(pack)
+    directiveSearchSensors: function(pack){
+      // websocket 接收传感器数据
+      console.log(pack);
+      let searchedSensorIDs = this.searchedSensorIDs;
+      if (!searchedSensorIDs.includes(pack.deviceID)) {
+        searchedSensorIDs.push(pack.deviceID);
+      } else {
+        this.addMessage('搜索传感器，重复接收到传感器'+pack.deviceID.toString()+'的应答', 'warning');
+      }
     },
   },
 };
@@ -423,6 +431,22 @@ export default {
 
 .wk-item-search-sensor{
   padding-top: 20px;
+}
+.wk-item-search-sensor-container{
+  padding: 15px 5px 5px 5px;
+}
+.wk-item-search-sensor .searched-sensor-item{
+  display: inline-block;
+  margin: 0 5px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  color: #464646;
+  font-weight: 700;
+  background-color: #67C23A;
+  border: 1px solid #67C23A;
+  border-radius: 15px;
 }
 .wk-item-pie{
   padding-top: 10px;
