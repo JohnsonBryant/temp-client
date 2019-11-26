@@ -71,14 +71,17 @@
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                @click="handleAddToTest(scope.$index, scope.row)">选择</el-button>
+                @click="handleAddToTest(scope.$index, scope.row)"
+                :disabled="controlEnabled">选择</el-button>
               <el-button
                 size="mini"
-                @click="handleDuplicate(scope.$index, scope.row)">复制</el-button>
+                @click="handleDuplicate(scope.$index, scope.row)"
+                :disabled="controlEnabled">复制</el-button>
               <el-button
                 size="mini"
                 type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                @click="handleDelete(scope.$index, scope.row)"
+                :disabled="controlEnabled">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -139,16 +142,19 @@
               <el-button
                 size="mini"
                 type="danger"
-                @click="deleteSelectedEquipment(scope.$index, scope.row)">删除</el-button>
+                @click="deleteSelectedEquipment(scope.$index, scope.row)"
+                :disabled="controlEnabled">删除</el-button>
             </template>
           </el-table-column>
         </el-table>   
       </div>
       <div class="selectEp-footer">
         <el-button class="selectEp-footer-btn left" type="info" round
-          @click="clearSelected">清空选择</el-button>
+          @click="clearSelected"
+          :disabled="controlEnabled">清空选择</el-button>
         <el-button class="selectEp-footer-btn right" type="success" round
-          @click="routerToTest">进入测试</el-button>
+          @click="startTest"
+          :disabled="controlEnabled">进入测试</el-button>
       </div>
     </el-drawer>
   </div>
@@ -180,6 +186,10 @@ export default {
   computed: {
     selectedEquipmentCount () {
       return this.$store.state.selectedEquipments.length;
+    },
+    controlEnabled () {
+      // 返回当前系统是否在测试状态的真值， 控制控件的可用状态
+      return this.$store.state.isOnTest;
     },
   },
   methods: {
@@ -263,7 +273,7 @@ export default {
     },
     handleSearchTextChange(value) {
       // 暂未使用
-      console.log(value)
+      console.log(value);
     },
     handleSelect(item) {
       // 查询此委托单位下的所有测试仪器，并展示给用户
@@ -310,8 +320,8 @@ export default {
       // 从当前选择测试仪器中删除某个仪器
       this.$store.commit('dropFromSelectedEquipments', row);
     },
-    routerToTest() {
-      let equipmentsSelected = this.selected.equipmentsSelected;
+    startTest() {
+      let equipmentsSelected = this.$store.state.selectedEquipments;
       // 检查已选择测试设备是否为0
       if (equipmentsSelected.length === 0) {
         this.addMessage('当前未选择测试仪器，请选择测试仪器后再尝试进入测试！', 'warning');
@@ -319,14 +329,13 @@ export default {
       }
       // 路由到测试管理页，将已选择设备信息转移到设备管理页
       this.addMessage('进入测试管理页，请配置测试信息，开始测试！');
-
+      this.$store.commit('switchIsTestPreparing', true);
       this.$router.push({ path: '/testConfig'});
-      // this.$router.push({ path: '/testConfig', query: { equipments: equipmentsSelected }});
     },
     addMessage(message, messageType) {
       this.$message({
         message: message,
-        type: messageType ? messageType : 'info'
+        type: messageType ? messageType : 'info',
       });
     },
   }

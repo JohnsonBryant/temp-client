@@ -8,7 +8,7 @@
               <!-- 新增测试仪器头区块，同一委托单位下可选择批量添加或单个添加 -->
               <div class="add-equip-header">
                 <el-form-item prop="company">
-                  <el-input class="company-input" placeholder="请输入委托单位名称" v-model="info.company">
+                  <el-input class="company-input" placeholder="请输入委托单位名称" v-model="info.company" :disabled="controlEnabled">
                     <template slot="prepend">委托单位：</template>
                   </el-input>
                 </el-form-item>
@@ -18,6 +18,7 @@
                   >返回</el-button>
                   <el-button class="submit-btn" type="success" icon="el-icon-check" round
                     @click="submitAddEquipment"
+                    :disabled="controlEnabled"
                   >提交</el-button>
                 </div>
               </div>
@@ -33,22 +34,22 @@
                     <el-form :model="equipment" :rules="rulesEquipmentInfo" ref="'equipment'+index">
                       <el-card class="box-card box-item">
                         <el-form-item prop="em">
-                          <el-input class="device-input" placeholder="请输入仪器厂家" v-model="equipment.em">
+                          <el-input class="device-input" placeholder="请输入仪器厂家" v-model="equipment.em" :disabled="controlEnabled">
                             <template slot="prepend">仪器厂家：</template>
                           </el-input>
                         </el-form-item>
                         <el-form-item prop="deviceName">
-                          <el-input class="device-input" placeholder="请输入仪器型号" v-model="equipment.deviceName">
+                          <el-input class="device-input" placeholder="请输入仪器型号" v-model="equipment.deviceName" :disabled="controlEnabled">
                             <template slot="prepend">仪器名称：</template>
                           </el-input>
                         </el-form-item>
                         <el-form-item prop="deviceType">
-                          <el-input class="device-input" placeholder="请输入仪器型号" v-model="equipment.deviceType">
+                          <el-input class="device-input" placeholder="请输入仪器型号" v-model="equipment.deviceType" :disabled="controlEnabled">
                             <template slot="prepend">仪器型号：</template>
                           </el-input>
                         </el-form-item>
                         <el-form-item prop="deviceID">
-                          <el-input class="device-input" placeholder="请输入仪器编号" v-model="equipment.deviceID">
+                          <el-input class="device-input" placeholder="请输入仪器编号" v-model="equipment.deviceID" :disabled="controlEnabled">
                             <template slot="prepend">仪器编号：</template>
                           </el-input>
                         </el-form-item>
@@ -60,9 +61,11 @@
                     <el-card class="box-card box-item box-add-btn">
                       <el-button class="btn btn-add" type="success" icon="el-icon-plus" circle
                         @click="addEqInputItem"
+                        :disabled="controlEnabled"
                       ></el-button>
                       <el-button class="btn btn-delete" type="danger" icon="el-icon-minus" circle
                         @click="deleteEqInputItem"
+                        :disabled="controlEnabled"                      
                       ></el-button>
                     </el-card>
                   </el-col>
@@ -110,29 +113,35 @@ export default {
       rulesCompany: rulesCompany
     }
   },
-  mounted() {
-    // 如果是从设备管理页路由到本也，并传递了参数，即设备复制功能
-    if ('equipment' in this.$route.query) {
-      // 更新 info.equipmentInfo[0]
-      this.info.company = this.$route.query.equipment.company;
-      for (let key in this.$route.query.equipment) {
-        if (this.info.equipmentInfo[0].hasOwnProperty(key)) {
-          this.info.equipmentInfo[0][key] = this.$route.query.equipment[key];
-        }
-      }
+  mounted () {
+    if (!this.$store.state.isOnTest) {
+      // 当前系统不再测试状态， 且能获取到路由传递的设备信息参数时， 认为为以某设备信息为模板，进行新增设备
+      this.initCopyDevice();
     }
   },
   methods: {
-    addEqInputItem() {
+    initCopyDevice () {
+      // 如果是路由到本页，并传递了参数，即设备复制功能
+      if ('equipment' in this.$route.query) {
+        // 更新 info.equipmentInfo[0]
+        this.info.company = this.$route.query.equipment.company;
+        for (let key in this.$route.query.equipment) {
+          if (this.info.equipmentInfo[0].hasOwnProperty(key)) {
+            this.info.equipmentInfo[0][key] = this.$route.query.equipment[key];
+          }
+        }
+      }
+    },
+    addEqInputItem () {
       this.info.equipmentInfo.push({em: '', deviceName: '', deviceType: '', deviceID: ''})
     },
-    deleteEqInputItem() {
+    deleteEqInputItem () {
       this.info.equipmentInfo.pop({em: '', deviceName: '', deviceType: '', deviceID: ''})
     },
     goBackToLandingPage () {
       this.$router.push({path: '/landingPage'});
     },
-    submitAddEquipment() {
+    submitAddEquipment () {
       // 所有单个仪器信息输入区的信息检查，如果检查失败，则不再继续执行后续操作
       // let len = this.info.equipmentInfo.length;
       // for (let i = 0; i < len; i++) {
@@ -172,7 +181,7 @@ export default {
         }
       });
     },
-    validateEquipmentInfo() {
+    validateEquipmentInfo () {
       // 检查
       let equipmentInfo = this.info.equipmentInfo.map((item,index)=>{
         let equipmentString = '';
@@ -192,6 +201,12 @@ export default {
         message: message,
         type: messageType
       });
+    },
+  },
+  computed: {
+    controlEnabled () {
+      // 返回当前系统是否在测试状态的真值， 控制控件的可用状态
+      return this.$store.state.isOnTest;
     },
   }
 };

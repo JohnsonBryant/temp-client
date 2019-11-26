@@ -9,11 +9,16 @@ const store = new Vuex.Store({
     cycle: 10,
     isSendding: true,
     equipments: [],
+    isTestPreparing: false,
     selectedEquipments: [],
   },
   mutations: {
     // 当前系统测试状态标识的 mutation
     changeTestState: (state, testState) => state.isOnTest = testState,
+    switchIsTestPreparing: (state, isPreparing) => {
+      // 标识当前是否启动进入测试
+      state.isTestPreparing = isPreparing;
+    },
     addToSelectedEquipments: (state, equipment) => {
       // 新增选择的测试仪器
       let equipmentsSelected = state.selectedEquipments;
@@ -58,6 +63,12 @@ export default store;
  *    测试仪器配置信息
  *      温湿度示值、中心点ID、其他由测试仪器挂载的传感器ID
  */
+
+
+ /** isTestPreparing
+  *  标识当前是否为测试准备状态， 即在设备管理页选择了设备，并点击了进入测试按钮， 点击进入测试时，置为 true
+  *  点击停止测试按钮， 并成功停止测试时， 置为 false
+  */
 
 
 /** state.equipmentsSelected

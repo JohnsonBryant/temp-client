@@ -104,27 +104,48 @@ export default {
       });
   },
   mounted() {
-    if ('equipments' in this.$route.query) {
-      // 如果是从设备管理页路由到本也，并传递了参数，即进入测试功能
-      let equipments = this.$route.query.equipments;
-      if (equipments instanceof Array === false) return;
-      equipments.forEach((equipment, index) => {
-        let testDevice = {
-          device: equipment,
-          config: {
-            temp: '',
-            humi: '',
-            centerID: '',
-            IDS: ''
-          }
-        };
-        this.testDeviceInfo.push(testDevice);
-      });
-    } else {
-
-    }
+    this.initSelectedEquipments();
   },
   methods: {
+    initSelectedEquipments () {
+      if (this.$store.state.isOnTest) {
+        // 检查当前系统为测试状态，则使用测试数据进行初始化
+        const equipments = this.$store.state.equipments;
+        const testDeviceInfo = [];
+        equipments.forEach((item, index) => {
+          let testDevice = {
+            device: this.util.copyObject(item.device),
+            config: this.util.copyObject(config),
+          };
+          testDeviceInfo.push(testDevice);
+        });
+
+        if (testDeviceInfo.length > 0) {
+          this.testDeviceInfo.splice(0, this.testDeviceInfo.length, testDeviceInfo);          
+        }
+        return;
+      }
+
+      if (this.$store.state.isTestPreparing) {
+        // 检查当前是否为选择了测试仪器，并点击了进入测试按钮， 是，则使用已选择仪器数组作为数据源进行初始化
+        let equipments = this.$store.state.selectedEquipments;
+        let that = this;
+        equipments.forEach((item, index) => {
+          let equipment = that.util.copyObject(item);
+          let testDevice = {
+            device: equipment,
+            config: {
+              temp: '',
+              humi: '',
+              centerID: '',
+              IDS: '',
+            }
+          };
+          this.testDeviceInfo.push(testDevice);
+        });
+        return;
+      }
+    },
     setAllEquipment() {
       // 使用预先配置的测试模板信息，一键配置所有测试仪器的温度示值、湿度示值、工作周期信息
       let testTemplate = this.testTemplate;
@@ -174,6 +195,7 @@ export default {
               if (result.isSuccess) {
                 // 更新 store.state.isOntest = false
                 this.$store.commit('changeTestState', false);
+                this.$store.commit('selectedEquipments', false);
               }
             })
             .catch(err => {
