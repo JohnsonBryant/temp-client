@@ -257,6 +257,8 @@ export default {
               let type = result.isSuccess ? 'success' : 'warning';
               let messgae = result.message;
               this.addMessage(messgae, type);
+              // 从 data.equipments 中删除对应的仪器
+              this.equipments.splice(index, 1);
             })
             .catch(err => {
               this.addMessage('异常错误，请刷新后检查是否成功删除!', 'warning');

@@ -22,7 +22,11 @@ const store = new Vuex.Store({
     addToSelectedEquipments: (state, equipment) => {
       // 新增选择的测试仪器
       let equipmentsSelected = state.selectedEquipments;
-      if (equipmentsSelected.length === 0 || equipmentsSelected.indexOf(equipment) === -1) {
+      // 检查当前已选择的仪器中是否存在， ID与新选择仪器相同的
+      let duplicated = equipmentsSelected.some((ele, index, all) => {
+        return ele.id === equipment.id;
+      });
+      if (equipmentsSelected.length === 0 || !duplicated) {
         equipmentsSelected.push(equipment);
       }
     },
