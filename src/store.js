@@ -15,6 +15,7 @@ const store = new Vuex.Store({
   mutations: {
     // 当前系统测试状态标识的 mutation
     changeTestState: (state, testState) => state.isOnTest = testState,
+    
     switchIsTestPreparing: (state, isPreparing) => {
       // 标识当前是否启动进入测试
       state.isTestPreparing = isPreparing;
@@ -22,7 +23,7 @@ const store = new Vuex.Store({
     addToSelectedEquipments: (state, equipment) => {
       // 新增选择的测试仪器
       let equipmentsSelected = state.selectedEquipments;
-      // 检查当前已选择的仪器中是否存在， ID与新选择仪器相同的
+      // 检查当前已选择的仪器中是否存在ID与新选择仪器相同的
       let duplicated = equipmentsSelected.some((ele, index, all) => {
         return ele.id === equipment.id;
       });
@@ -32,13 +33,22 @@ const store = new Vuex.Store({
     },
     dropFromSelectedEquipments: (state, equipment) => {
       // 从当前选择测试仪器中删减选择的测试仪器
-      // 数组的元素是对象，无法使用 Array.indexOf 检查是否存在， 应调整为检查数组元素的每一项属性值是否相等进行判断是否为同一仪器 
       let equipmentsSelected = state.selectedEquipments;
       equipmentsSelected.splice(equipmentsSelected.indexOf(equipment), 1);
     },
     clearAllSelectedEquipments: (state) => {
+      // 清空 store.state.selectedEquipments 数组
       state.selectedEquipments.splice(0, state.selectedEquipments.length);
     },
+
+    setEquiptments (state, selectedEquipments) {
+      // 启动测试时，初始化设置测试仪器数组
+      state.equipments.splice(0, state.equipments.length, ...selectedEquipments);
+    },
+    resetEquipments (state) {
+      // 启动测试失败、或者停止测试时触发， 用于清空测试仪器信息数组
+      state.equipments = [];
+    }
   }
 });
 
@@ -66,6 +76,9 @@ export default store;
  *      委托单位、厂家、仪器名称、仪器型号、仪器编号
  *    测试仪器配置信息
  *      温湿度示值、中心点ID、其他由测试仪器挂载的传感器ID
+ *    传感器数据： ID为键，数据数组为值
+ *    数据时间： 时间数组为值
+ *    检测数据： 检测数据数组为值， 包含 温度与湿度的 均匀度、波动度、偏差，共 6 项数据
  */
 
 

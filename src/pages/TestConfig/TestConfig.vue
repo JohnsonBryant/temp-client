@@ -7,30 +7,43 @@
             <el-row :gutter="10">
               <el-col :span="2"><span style="height:40px;line-height:40px;">测试管理页</span></el-col>
               <el-col :span="6">
-                <el-input class="cycle-input" placeholder="请输入工作周期s" v-model="cycle">
+                <el-input 
+                  class="cycle-input" placeholder="请输入工作周期s" v-model="cycle"
+                  :disabled="systemControlsEnable">
                   <template slot="prepend">工作周期：</template>
                 </el-input>
               </el-col>
               <el-col :span="7">
-                <el-switch class="cycle-switch"
+                <el-switch 
+                  class="cycle-switch"
                   v-model="testTemplate.isSendding"
                   active-color="#13ce66"
                   inactive-color="#ff4949"
                   active-text="周期获取数据"
-                  inactive-text="仅监测数据">
-                </el-switch>
+                  inactive-text="仅监测数据"
+                  :disabled="systemControlsEnable"
+                ></el-switch>
               </el-col>
               <el-col :span="3">
-                <el-button @click="setAllEquipment"
-                  class="test-header-btn" type="success" round>一键配置</el-button>
+                <el-button
+                  @click="setAllEquipment"
+                  class="test-header-btn" type="success" round
+                  :disabled="systemControlsEnable"
+                >一键配置</el-button>
               </el-col>
               <el-col :span="3">
-                <el-button @click="stopTest" 
-                  class="test-header-btn" type="info" round>停止测试</el-button>
+                <el-button 
+                  @click="stopTest" 
+                  class="test-header-btn" type="info" round
+                  :disabled="!systemControlsEnable"
+                >停止测试</el-button>
               </el-col>
               <el-col :span="3">
-                <el-button @click="startTest" 
-                  class="test-header-btn" type="success" round>启动测试</el-button>
+                <el-button
+                 @click="startTest" 
+                  class="test-header-btn" type="success" round
+                  :disabled="systemControlsEnable"
+                >启动测试</el-button>
               </el-col>
             </el-row>
         </el-card>
@@ -65,23 +78,6 @@ export default {
     return {
       cycle: '',
       isSendding: false,
-      testDeviceInfo: [
-        // {
-        //   device: {
-        //     company: '',
-        //     em: '',
-        //     deviceName: '',
-        //     deviceType: '',
-        //     deviceID: '',
-        //   },
-        //   config: {
-        //     temp: '',
-        //     humi: '',
-        //     centerID: '',
-        //     IDS: '',
-        //   }
-        // }
-      ],
       testTemplate: {
         cycle: '',
         temp: '',
@@ -90,10 +86,12 @@ export default {
         IDS: '',
         isSendding: true
       },
+      testDeviceInfo: [],
     }
   },
-  beforeMount() {
+  created() {
     // 获取测试模板信息，并初始化 data.testTemplate
+    this.initTestDeviceInfo();
     this.axios.get(this.util.testApi() + '/testTemplate/get')
       .then(res => {
         this.setData(this.testTemplate, res.data);
@@ -103,47 +101,34 @@ export default {
         console.log(err);
       });
   },
-  mounted() {
-    this.initSelectedEquipments();
-  },
   methods: {
-    initSelectedEquipments () {
+    initTestDeviceInfo () {
       if (this.$store.state.isOnTest) {
         // 检查当前系统为测试状态，则使用测试数据进行初始化
-        const equipments = this.$store.state.equipments;
-        const testDeviceInfo = [];
-        equipments.forEach((item, index) => {
-          let testDevice = {
-            device: this.util.copyObject(item.device),
-            config: this.util.copyObject(config),
-          };
-          testDeviceInfo.push(testDevice);
+        this.cycle = this.$store.state.cycle;
+        this.isSendding = this.$store.state.isSendding;
+        let equipments = JSON.parse(JSON.stringify(this.$store.state.equipments));
+        equipments.forEach((ele) => {
+          ele.config.IDS = ele.config.IDS.join(',');
         });
-
-        if (testDeviceInfo.length > 0) {
-          this.testDeviceInfo.splice(0, this.testDeviceInfo.length, testDeviceInfo);          
-        }
+        this.testDeviceInfo.splice(0, this.testDeviceInfo.length, ...equipments);
         return;
       }
 
       if (this.$store.state.isTestPreparing) {
         // 检查当前是否为选择了测试仪器，并点击了进入测试按钮， 是，则使用已选择仪器数组作为数据源进行初始化
-        let equipments = this.$store.state.selectedEquipments;
-        let that = this;
-        equipments.forEach((item, index) => {
-          let equipment = that.util.copyObject(item);
-          let testDevice = {
-            device: equipment,
+        let equipments = JSON.parse(JSON.stringify(this.$store.state.selectedEquipments));
+        let testDeviceInfo = equipments.map(ele => {
+          return Object.assign({device: ele}, {
             config: {
               temp: '',
               humi: '',
-              centerID: '',
               IDS: '',
+              centerID: '',
             }
-          };
-          this.testDeviceInfo.push(testDevice);
+          });
         });
-        return;
+        this.testDeviceInfo.splice(0, this.testDeviceInfo.length, ...testDeviceInfo);
       }
     },
     setAllEquipment() {
@@ -162,14 +147,105 @@ export default {
         this.addMessage('当前系统处于测试转态，请勿重复操作！', 'info');
         return;
       }
+      let cycle = this.cycle;
+      let isSendding = this.isSendding;
+      let selectedEquipments = JSON.parse(JSON.stringify(this.testDeviceInfo));  // 深拷贝 选择的测试仪器信息数组， 用于检查及传递给 store 中对应的 miutation。
       // 检查是否具备启动测试条件
-      
+      if ( !this.util.isPositiveInteger(cycle)) {
+        // 周期参数错误
+        this.addMessage('周期错误，周期必须为数值，且应大于或等于1 ！');
+        return;
+      }
+      if (!Array.isArray(selectedEquipments) || selectedEquipments.length === 0) {
+        // 测试仪器信息错误，或测试仪器为空
+        this.addMessage('空仪器错误，必须选择一个测试仪器并配置完成后，才能进行测试 ！');
+        return;
+      }
+      // 测试仪器信息检查
+      let devicesTemp = selectedEquipments.map((item) => {
+        return item.device.company + item.device.em + item.device.deviceName + item.device.deviceType + item.device.deviceID;
+      });
+      if ( devicesTemp.some((item, index, arr) => arr.indexOf(item) !== arr.lastIndexOf(item)) ) {
+        // 检查到重复的两个仪器
+        this.addMessage('仪器重复错误，不允许在同一次测试中出现两个相同的仪器 ！');
+        return;
+      }
+      // 测试仪器下挂载的其他传感器ID的转换及检查
+      let IDS = [];
+      selectedEquipments.forEach((ele) => {
+        let s = ele.config.IDS.replace(/,|，/g,',');
+        let ids = s.split(',').map(id => parseInt(id));
+        IDS.push(...ids);
+        ele.config.IDS = ids;
+        ele.config.centerID = parseInt(ele.config.centerID);
+      });
+      if (IDS.some((item) => !this.util.isInteger(item) || (item > 255 || item < 0 ) )) {
+        this.addMessage('传感器挂载的其他ID输入有错误，请检查后重试 ！');
+        return;
+      }
+      // 测试仪器下挂载的传感器ID检查
+      let allID = [];
+      selectedEquipments.forEach((item) => {
+        allID.push(item.config.centerID, ...item.config.IDS);
+      });
+      if ( allID.some((item) => !this.util.isInteger(item) || (item > 255 || item < 0 ) ) ) {
+        // 检查到无效的ID，所有传感器ID均必须为数值，且在0-255范围内
+        this.addMessage('传感器ID错误，ID只接受0-255之间的数值 ！');
+        return;
+      }
+      if ( allID.some((item, index, arr) => arr.indexOf(item) !== arr.lastIndexOf(item)) ) {
+        // 检查到重复传感器ID
+        this.addMessage('传感器ID错误，测试仪器下挂载的传感器ID存在重复，请检查后重试 ！');
+        return;
+      }
+      if ( selectedEquipments.some((item) => !this.util.isValidNumber(item.config.temp) || !this.util.isValidNumber(item.config.humi)) ) {
+        // 检查到测试仪器配置温湿度示值存在非数值。测试仪器配置的温湿度示值有效性检查，必须为数值
+        this.addMessage('测试仪器的温湿度示值输入错误，温湿度示值必须为有效数值 ！');
+        return;
+      }
+      // 拓展 selectedEquipments, 添加用于存储传感器数据、检测数据及对应数据时间的键值对
+      selectedEquipments.forEach((equipment) => {
+        let data = {};
+        let ids = equipment.config.IDS.concat(equipment.config.centerID);
+        data['IDS'] = ids.sort((a, b) => a-b);
+        data['IDS'].forEach((ID) => {
+          data[ID] = [];
+        });
+        Object.assign(data, {
+          'evennessTemp': [],
+          'fluctuationTemp': [],
+          'deviationTemp': [],
+          'evennessHumi': [],
+          'fluctuationHumi': [],
+          'deviationHumi': [],
+          'time': []
+        });
+        Object.assign(equipment, { data });
+      });
+      this.$store.commit('setEquiptments', selectedEquipments); // 初始化设置 store.state 中的测试仪器信息数组
       // 给后台启动测试信号，所有测试设备信息传送到后端程序
-      
-        // 提示操作结果
-        this.addMessage('启动测试成功！！', 'success');
-        // 启动测试成功，更新 store.state
-        this.$store.commit('changeTestState', true);
+      this.axios.post('/startTest', {
+          cycle: cycle,
+          isSendding: isSendding,
+          equipments: selectedEquipments,
+        })
+        .then((res) => {
+          // 提示启动测试的操作结果
+          let result = res.data;
+          let type = result.isSuccess ? 'success' : 'warning';
+          let messgae = result.message;
+          this.addMessage(messgae, type);
+          if (result.isSuccess) {
+            // 启动测试成功， 更新 store.state.isOnTest 系统测试状态标识
+            this.$store.commit('changeTestState', true);
+          } else {
+            // 启动测试失败， 清空 store.state 中的测试仪器信息数组
+            this.$store.commit('resetEquipments');
+          }
+        })
+        .catch((err) => {
+          alert(`启动测试过程发生异常错误！${err.message}`);
+        });
     },
     stopTest() {
       // 检查当前是否在 非测试状态
@@ -190,13 +266,14 @@ export default {
               let result = res.data;
               let type = result.isSuccess ? 'success' : 'warning';
               let messgae = result.message;
-              this.addMessage(messgae, type);
               // 停止采集成功
               if (result.isSuccess) {
                 // 更新 store.state.isOntest = false
                 this.$store.commit('changeTestState', false);
-                this.$store.commit('selectedEquipments', false);
+                // 清空 store.state 中已选择仪器数组
+                this.$store.commit('clearAllSelectedEquipments', false);
               }
+              this.addMessage(messgae, type);
             })
             .catch(err => {
               this.addMessage('异常错误，请刷新后检查是否成功!', 'warning');
@@ -222,6 +299,9 @@ export default {
   computed: {
     getCurrentState () {
       return (this.testDeviceInfo.length === 0) && !this.$store.state.isOnTest;
+    },
+    systemControlsEnable () {
+      return this.$store.state.isOnTest;
     }
   }
 };
