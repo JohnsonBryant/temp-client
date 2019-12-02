@@ -89,9 +89,9 @@ export default {
       testDeviceInfo: [],
     }
   },
-  created() {
+  beforeMount() {
     // 获取测试模板信息，并初始化 data.testTemplate
-    this.initTestDeviceInfo();
+    setTimeout(this.initTestDeviceInfo, 1000);
     this.axios.get(this.util.testApi() + '/testTemplate/get')
       .then(res => {
         this.setData(this.testTemplate, res.data);
@@ -147,7 +147,7 @@ export default {
         this.addMessage('当前系统处于测试转态，请勿重复操作！', 'info');
         return;
       }
-      let cycle = this.cycle;
+      let cycle = parseInt(this.cycle);
       let isSendding = this.isSendding;
       let selectedEquipments = JSON.parse(JSON.stringify(this.testDeviceInfo));  // 深拷贝 选择的测试仪器信息数组， 用于检查及传递给 store 中对应的 miutation。
       // 检查是否具备启动测试条件
@@ -222,6 +222,8 @@ export default {
         });
         Object.assign(equipment, { data });
       });
+      this.$store.commit('setCycle', cycle);
+      this.$store.commit('setIsSendding', isSendding);
       this.$store.commit('setEquiptments', selectedEquipments); // 初始化设置 store.state 中的测试仪器信息数组
       // 给后台启动测试信号，所有测试设备信息传送到后端程序
       this.axios.post('/startTest', {
@@ -237,7 +239,7 @@ export default {
           this.addMessage(messgae, type);
           if (result.isSuccess) {
             // 启动测试成功， 更新 store.state.isOnTest 系统测试状态标识
-            this.$store.commit('changeTestState', true);
+            this.$store.commit('setIsOnTest', true);
           } else {
             // 启动测试失败， 清空 store.state 中的测试仪器信息数组
             this.$store.commit('resetEquipments');
@@ -269,7 +271,7 @@ export default {
               // 停止采集成功
               if (result.isSuccess) {
                 // 更新 store.state.isOntest = false
-                this.$store.commit('changeTestState', false);
+                this.$store.commit('setIsOnTest', false);
                 // 清空 store.state 中已选择仪器数组
                 this.$store.commit('clearAllSelectedEquipments', false);
               }

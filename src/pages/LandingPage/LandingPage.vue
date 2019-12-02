@@ -179,13 +179,22 @@ export default {
       equipmentsSelected: [],
     };
   },
+  beforeMount() {
+    setTimeout(this.initSelectedEquipments, 1000);
+  },
   mounted() {
-    this.getLatestFiveEq()
-    this.getLastestFiveCompanys()
+    this.getLatestFiveEq();
+    this.getLastestFiveCompanys();
   },
   computed: {
     selectedEquipmentCount () {
-      return this.$store.state.selectedEquipments.length;
+      let length = 0;
+      if (this.$store.state.isOnTest) {
+        length = this.$store.state.equipments.length;
+      } else {
+        length = this.$store.state.selectedEquipments.length;
+      }
+      return length;
     },
     controlEnabled () {
       // 返回当前系统是否在测试状态的真值， 控制控件的可用状态
@@ -333,6 +342,17 @@ export default {
       this.addMessage('进入测试管理页，请配置测试信息，开始测试！');
       this.$store.commit('switchIsTestPreparing', true);
       this.$router.push({ path: '/testConfig'});
+    },
+    initSelectedEquipments () {
+      if (this.$store.state.isOnTest) {
+        let equipments = [];
+        this.$store.state.equipments.forEach((ele, index, arr) => {
+          equipments.push(ele.device);
+        });
+        equipments = JSON.parse(JSON.stringify(equipments));
+        console.log(equipments);
+        this.$store.commit('setSelectedEquipments', equipments);
+      }
     },
     addMessage(message, messageType) {
       this.$message({

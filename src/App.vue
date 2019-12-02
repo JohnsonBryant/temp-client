@@ -2,6 +2,38 @@
   <router-view/>
 </template>
 
+<script>
+export default {
+  name: 'app',
+  created () {
+    this.initStore();
+  },
+  methods: {
+    initStore () {
+      // get nessary system data from back end
+      this.axios.get('/systemSync')
+        .then(res => {
+          let result = res.data;
+          if (result.isOnTest) {
+            // 当前系统在测试状态， 同步前端 store.state 中对应的数据项
+            this.$store.commit('setIsOnTest', result.isOnTest);
+            this.$store.commit('setCycle', result.cycle);
+            this.$store.commit('setIsSendding', result.isSendding);
+            this.$store.commit('setEquiptments', result.equipments);
+          } else {
+            // 当前系统不在测试状态， 不用同步前端 store.state 中的数据， 前端自行初始化
+          }
+        })
+        .catch(err => {
+          if (err) {
+            alert(`系统初始化错误，错误提示：${err.message}`);
+          }
+        });
+    },
+  },
+}
+</script>
+
 <style lang="scss">
 /*复写默认样式*/
 .el-submenu__title{

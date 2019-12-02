@@ -113,7 +113,7 @@ export default {
       rulesCompany: rulesCompany
     }
   },
-  mounted () {
+  beforeMount () {
     if (!this.$store.state.isOnTest) {
       // 当前系统不再测试状态， 且能获取到路由传递的设备信息参数时， 认为为以某设备信息为模板，进行新增设备
       this.initCopyDevice();

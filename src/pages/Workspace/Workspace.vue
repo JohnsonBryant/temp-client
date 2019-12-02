@@ -251,7 +251,7 @@ export default {
       searchedSensorIDs: [1, 2, 3, 4, 5, 6], // 存储搜索传感器功能搜索到的传感器ID
     }
   },
-  mounted() {
+  beforeMount() {
     this.initConfig()
   },
   methods: {

@@ -14,12 +14,21 @@ const store = new Vuex.Store({
   },
   mutations: {
     // 当前系统测试状态标识的 mutation
-    changeTestState: (state, testState) => state.isOnTest = testState,
+    setIsOnTest: (state, testState) => state.isOnTest = testState,
     
     switchIsTestPreparing: (state, isPreparing) => {
       // 标识当前是否启动进入测试
       state.isTestPreparing = isPreparing;
     },
+
+    setCycle (state, cycle) {
+      state.cycle = cycle;
+    },
+
+    setIsSendding (state, isSendding) {
+      state.isSendding = isSendding;
+    },
+
     addToSelectedEquipments: (state, equipment) => {
       // 新增选择的测试仪器
       let equipmentsSelected = state.selectedEquipments;
@@ -40,10 +49,13 @@ const store = new Vuex.Store({
       // 清空 store.state.selectedEquipments 数组
       state.selectedEquipments.splice(0, state.selectedEquipments.length);
     },
+    setSelectedEquipments (state, equipments) {
+      state.selectedEquipments.splice(0, state.selectedEquipments.length, ...equipments);
+    },
 
-    setEquiptments (state, selectedEquipments) {
+    setEquiptments (state, equipments) {
       // 启动测试时，初始化设置测试仪器数组
-      state.equipments.splice(0, state.equipments.length, ...selectedEquipments);
+      state.equipments.splice(0, state.equipments.length, ...equipments);
     },
     resetEquipments (state) {
       // 启动测试失败、或者停止测试时触发， 用于清空测试仪器信息数组
