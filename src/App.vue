@@ -20,8 +20,6 @@ export default {
             this.$store.commit('setCycle', result.cycle);
             this.$store.commit('setIsSendding', result.isSendding);
             this.$store.commit('setEquiptments', result.equipments);
-          } else {
-            // 当前系统不在测试状态， 不用同步前端 store.state 中的数据， 前端自行初始化
           }
         })
         .catch(err => {

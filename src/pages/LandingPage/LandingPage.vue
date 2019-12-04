@@ -26,13 +26,14 @@
         </el-card>
         <!-- 已添加测试仪器信息展示表格，表格分页，表格可根据委托单位进行自定义检索表内已有信息 -->
         <el-table
+          border resizable
           ref="filterTable"
           :data="equipments"
           style="width: 100%; margin-top: 10px;">
           <el-table-column
             prop="company"
             label="委托单位"
-            min-width="180"
+            min-width="160"
             :filters="[{text: '南京高华科技股份有限公司', value: '南京高华科技股份有限公司'}, {text: '南京高华科技股份有限公司科技有限公司', value: '南京高华科技股份有限公司科技有限公司'}]"
             :filter-method="filterHandler"
           >
@@ -45,17 +46,17 @@
           <el-table-column
             prop="deviceType"
             label="仪器型号"
-            min-width="130">
+            min-width="90">
           </el-table-column>
           <el-table-column
             prop="deviceID"
             label="仪器编号"
-            min-width="100">
+            min-width="90">
           </el-table-column>
           <el-table-column
             prop="em"
             label="仪器厂家"
-            min-width="180">
+            min-width="160">
           </el-table-column>
           <el-table-column
             prop="insertDate"
@@ -66,7 +67,7 @@
           >
           </el-table-column>
           <el-table-column label="操作"
-            min-width="180"
+            min-width="200"
           >
             <template slot-scope="scope">
               <el-button
@@ -101,12 +102,13 @@
       </div>
       <div class="selectEp-body">
         <el-table
+          border resizable
           :data="this.$store.state.selectedEquipments"
           style="width: 100%; margin-top: 0px;">
           <el-table-column
             prop="company"
             label="委托单位"
-            min-width="180"
+            min-width="160"
           >
           </el-table-column>
           <el-table-column
@@ -117,17 +119,17 @@
           <el-table-column
             prop="deviceType"
             label="仪器型号"
-            min-width="130">
+            min-width="90">
           </el-table-column>
           <el-table-column
             prop="deviceID"
             label="仪器编号"
-            min-width="100">
+            min-width="90">
           </el-table-column>
           <el-table-column
             prop="em"
             label="仪器厂家"
-            min-width="180">
+            min-width="160">
           </el-table-column>
           <el-table-column
             prop="insertDate"
@@ -136,7 +138,7 @@
           >
           </el-table-column>
           <el-table-column label="操作"
-            min-width="120"
+            min-width="200"
           >
             <template slot-scope="scope">
               <el-button

@@ -6,7 +6,7 @@
           功能配置页
         </el-card>
         <div class="wk-container">
-          <el-row :gutter="15">
+          <el-row :gutter="10">
             <el-col :span="12">
               <el-card class="wk-item" shadow="always">
                 <h4 class="wk-item-title">参数配置</h4>
@@ -97,14 +97,14 @@
                 <el-form :model="testTemplate" :rules="rulestestTemplate" ref="testTemplate" >
                   <div class="wk-item-pie">
                     <el-row :gutter="10">
-                      <el-col :span="10">
+                      <el-col :span="11">
                         <el-form-item prop="cycle">
                           <el-input class="cycle-input" placeholder="请输入工作周期s" v-model.trim="testTemplate.cycle" :disabled="controlEnabled">
                             <template slot="prepend">工作周期(s/秒)：</template>
                           </el-input>
                         </el-form-item>
                       </el-col>
-                      <el-col :span="10">
+                      <el-col :span="11">
                         <el-form-item prop="centerID">
                           <el-input class="testEq-item-conf-input" placeholder="输入中心点ID" v-model.trim="testTemplate.centerID" :disabled="controlEnabled">
                             <template slot="prepend">中心点ID：</template>
@@ -115,14 +115,14 @@
                   </div>
                   <div class="wk-item-pie">
                     <el-row :gutter="10">
-                      <el-col :span="10">
+                      <el-col :span="11">
                         <el-form-item prop="temp">
                           <el-input class="testEq-item-conf-input" placeholder="输入温度示值" v-model.trim="testTemplate.temp" :disabled="controlEnabled">
                             <template slot="prepend">温度示值(℃)：</template>
                           </el-input>
                         </el-form-item>
                       </el-col>
-                      <el-col :span="10">
+                      <el-col :span="11">
                         <el-form-item prop="IDS">
                           <el-input class="testEq-item-conf-input" placeholder="输入传感器ID：1,2" v-model.trim="testTemplate.IDS" :disabled="controlEnabled">
                             <template slot="prepend">传感器ID：</template>
@@ -133,25 +133,27 @@
                   </div>
                   <div class="wk-item-pie">
                     <el-row :gutter="10">
-                      <el-col :span="10">
+                      <el-col :span="11">
                         <el-form-item prop="humi">
                           <el-input class="testEq-item-conf-input" placeholder="输入湿度示值" v-model.trim="testTemplate.humi" :disabled="controlEnabled">
                             <template slot="prepend">湿度示值(%RH)：</template>
                           </el-input>
                         </el-form-item>                
                       </el-col>
-                      <el-col :span="10" style="padding-top: 10px;border: 1px solid #dfdfdf;border-radius: 5px;height: 40px; background-color: #F5F7FA;">
-                        <el-form-item prop="isSendding">
-                          <el-switch
-                            style="display: block"
-                            v-model="testTemplate.isSendding"
-                            active-color="#13ce66"
-                            inactive-color="#ff4949"
-                            active-text="周期获取数据"
-                            inactive-text="仅监测数据"
-                            :disabled="controlEnabled">
-                          </el-switch>
-                        </el-form-item>
+                      <el-col :span="11">
+                        <div style="padding-top: 10px;padding-left:10px;border: 1px solid #dfdfdf;border-radius: 5px;height: 40px; background-color: #F5F7FA;">
+                          <el-form-item prop="isSendding">
+                            <el-switch
+                              style="display: block"
+                              v-model="testTemplate.isSendding"
+                              active-color="#13ce66"
+                              inactive-color="#ff4949"
+                              active-text="周期获取数据"
+                              inactive-text="仅监测数据"
+                              :disabled="controlEnabled">
+                            </el-switch>
+                          </el-form-item>
+                        </div>
                       </el-col>                  
                     </el-row>
                     <div class="wk-template-btns">

@@ -171,6 +171,7 @@ export default {
             .then(res => {
               if (res.data.isSuccess) {
                 this.addMessage('仪器新增成功！', 'success');
+                this.$router.push({path: '/landingPage'});
               } else {
                 this.addMessage('仪器新增失败！', 'warning');
               }
