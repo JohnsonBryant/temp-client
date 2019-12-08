@@ -142,15 +142,6 @@ export default {
       this.$router.push({path: '/landingPage'});
     },
     submitAddEquipment () {
-      // 所有单个仪器信息输入区的信息检查，如果检查失败，则不再继续执行后续操作
-      // let len = this.info.equipmentInfo.length;
-      // for (let i = 0; i < len; i++) {
-      //   this.$refs['equipment'+i].validate((valid) => {
-      //     if (!valid) {
-      //       return;
-      //     }
-      //   });
-      // }
       // 输入的仪器信息检查 : 输入不能为空
       this.$refs['info'].validate((valid) => {
         if (valid) {

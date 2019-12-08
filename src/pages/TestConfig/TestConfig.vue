@@ -175,9 +175,9 @@ export default {
       selectedEquipments.forEach((ele) => {
         let s = ele.config.IDS.replace(/,|，/g,',');
         let ids = s.split(',').map(id => parseInt(id));
-        IDS.push(...ids);
-        ele.config.IDS = ids;
         ele.config.centerID = parseInt(ele.config.centerID);
+        IDS.push(...ids, ele.config.centerID);
+        ele.config.IDS = ids;
       });
       if (IDS.some((item) => !this.util.isInteger(item) || (item > 255 || item < 0 ) )) {
         this.addMessage('传感器挂载的其他ID输入有错误，请检查后重试 ！');
@@ -230,6 +230,7 @@ export default {
           cycle: cycle,
           isSendding: isSendding,
           equipments: selectedEquipments,
+          IDS: IDS,
         })
         .then((res) => {
           // 提示启动测试的操作结果
