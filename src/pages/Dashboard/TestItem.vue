@@ -1,6 +1,6 @@
 <template>
     <el-card class="dash-test-item" shadow="always">
-    <h4>委托单位  --  仪器厂家  --  仪器名称  --  仪器型号  --  仪器编号</h4>
+    <h4 v-html="equipmentTitle"></h4>
     <el-row :gutter="6">
       <el-col :span="18">
         <el-row :gutter="8">
@@ -18,7 +18,7 @@
       </el-col>
       <el-col :span="6">
         <el-card class="test-item-data" shadow="always">
-          <h4>数据更新时间：2019-10-11 22:00:00</h4>
+          <h4>数据更新时间：{{updateTime}}</h4>
           <div class="test-item-testdata">
             <el-table
               :data="testData"
@@ -60,7 +60,22 @@ export default {
   components: {
     'v-chart': ECharts
   },
-  props: ['testData', 'temps', 'humis'],
+  props: ['equipment', 'updateTime', 'testData', 'temps', 'humis'],
+  computed: {
+    equipmentTitle() {
+      return `
+        <span>${this.equipment.company}</span>
+        <span style="margin:0 10px;">__</span>
+        <span>${this.equipment.em}</span>
+        <span style="margin:0 10px;">__</span>
+        <span>${this.equipment.deviceName}</span>
+        <span style="margin:0 10px;">__</span>
+        <span>${this.equipment.deviceType}</span>
+        <span style="margin:0 10px;">__</span>
+        <span>${this.equipment.deviceID}</span>
+      `;
+    }
+  }
 }
 </script>
 

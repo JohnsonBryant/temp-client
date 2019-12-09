@@ -30,7 +30,7 @@
                           </el-form-item>
                         </el-col>
                         <el-col :span="4">
-                          <el-button @click="handlePortSetClick" type="primary" :disabled="controlEnabled">提交<i class="el-icon-check el-icon--right"></i></el-button>
+                          <el-button @click="PortSetClick" type="primary" :disabled="controlEnabled">提交<i class="el-icon-check el-icon--right"></i></el-button>
                         </el-col>
                       </el-row>
                     </el-form>
@@ -53,7 +53,7 @@
                           </el-form-item>
                         </el-col>
                         <el-col :span="4">
-                          <el-button @click="handleBatterySetClick" type="primary" :disabled="controlEnabled">提交<i class="el-icon-check el-icon--right"></i></el-button>
+                          <el-button @click="BatterySetClick" type="primary" :disabled="controlEnabled">提交<i class="el-icon-check el-icon--right"></i></el-button>
                         </el-col>                      
                       </el-row>
                     </el-form>
@@ -76,12 +76,12 @@
                           </el-form-item>
                         </el-col>
                         <el-col :span="4">
-                          <el-button @click="handleIDSetClick" type="primary" :disabled="controlEnabled">提交<i class="el-icon-check el-icon--right"></i></el-button>
+                          <el-button @click="IDSetClick" type="primary" :disabled="controlEnabled">提交<i class="el-icon-check el-icon--right"></i></el-button>
                         </el-col>
                       </el-row>
                     </el-form>
                     <div class="wk-item-search-sensor">
-                      <el-button @click="handleSerachSensorClick" type="success" :disabled="controlEnabled">搜索传感器<i class="el-icon-check el-icon--right"></i></el-button>
+                      <el-button @click="SerachSensorClick" type="success" :disabled="controlEnabled">搜索传感器<i class="el-icon-check el-icon--right"></i></el-button>
                       <div class="wk-item-search-sensor-container">
                         <span class="searched-sensor-item" v-for="(sensorID) in searchedSensorIDs" :key="sensorID">{{ sensorID }}</span>
                       </div>
@@ -157,7 +157,7 @@
                       </el-col>                  
                     </el-row>
                     <div class="wk-template-btns">
-                      <el-button @click="handletestTemplateSaveClick" type="primary" :disabled="controlEnabled">保存测试模板<i class="el-icon-check el-icon--right"></i></el-button>
+                      <el-button @click="TestTemplateSaveClick" type="primary" :disabled="controlEnabled">保存测试模板<i class="el-icon-check el-icon--right"></i></el-button>
                     </div>
                   </div>
                 </el-form>
@@ -250,14 +250,38 @@ export default {
       rulesBattery: rules.Battery,
       rulesidSetting: rules.idSetting,
       rulestestTemplate: rules.testTemplate,
-      searchedSensorIDs: [1, 2, 3, 4, 5, 6], // 存储搜索传感器功能搜索到的传感器ID
+      searchedSensorIDs: [1], // 存储搜索传感器功能搜索到的传感器ID
     }
   },
   beforeMount() {
-    this.initConfig()
+    this.initConfig();
+  },
+  computed: {
+    controlEnabled () {
+      return this.$store.state.isOnTest; // 返回当前系统是否在测试状态的真值， 控制控件的可用状态
+    },
   },
   methods: {
-    handlePortSetClick() {
+    initConfig() {
+      // 获取当前程序配置信息，并初始化 data.config
+      this.axios.get(this.util.testApi() + '/config/get')
+      .then(res => {
+        this.setData(this.SerialPort, res.data);
+        this.setData(this.Battery, res.data);
+      })
+      .catch(err => {
+        this.addMessage(`异常错误，请刷新后重试！${err.message}`, 'warning'); // 失败处理
+      })
+      // 获取当前测试模板信息，并初始化 data.testTemplate
+      this.axios.get(this.util.testApi() + '/testTemplate/get')
+      .then(res => {
+        this.setData(this.testTemplate, res.data);
+      })
+      .catch(err => {
+        this.addMessage(`异常错误，请刷新后重试！${err.message}`, 'warning'); // 失败处理
+      });
+    },
+    PortSetClick() {
       this.$refs['SerialPort'].validate((valid) => {
         if (valid) {
           // 串口参数修改数据提交处理函数
@@ -274,7 +298,7 @@ export default {
         }
       })
     },
-    handleBatterySetClick() {
+    BatterySetClick() {
       this.$refs['Battery'].validate((valid) => {
         if (valid) {
           // 电池参数修改数据提交处理函数
@@ -291,7 +315,7 @@ export default {
         }
       })
     },
-    handleIDSetClick() {
+    IDSetClick() {
       this.$refs['idSetting'].validate((valid) => {
         if (valid) {
           // 更改传感器ID，提交处理函数
@@ -308,7 +332,7 @@ export default {
         }
       })
     },
-    handleSerachSensorClick() {
+    SerachSensorClick() {
       // 重置当前缓存 搜索传感器ID的变量
       const searchedSensorIDs = this.searchedSensorIDs;
       if (searchedSensorIDs.length !== 0) {
@@ -323,7 +347,7 @@ export default {
           this.addMessage('异常错误，请刷新后重试！', 'warning');
         })
     },
-    handletestTemplateSaveClick() {
+    TestTemplateSaveClick() {
       this.$refs['testTemplate'].validate((valid) => {
         if (valid) {
           const testTemplate = this.testTemplate;
@@ -351,27 +375,7 @@ export default {
         }
       })      
     },
-    initConfig() {
-      // 获取当前程序配置信息，并初始化 data.config
-      this.axios.get(this.util.testApi() + '/config/get')
-        .then(res => {
-          this.setData(this.SerialPort, res.data);
-          this.setData(this.Battery, res.data);
-        })
-        .catch(err => {
-          // 失败处理
-          console.log(err);
-        })
-      // 获取当前测试模板信息，并初始化 data.testTemplate
-      this.axios.get(this.util.testApi() + '/testTemplate/get')
-        .then(res => {
-          this.setData(this.testTemplate, res.data);
-        })
-        .catch(err => {
-          // 失败处理
-          this.addMessage('异常错误，请刷新后重试！', 'warning');
-        })
-    },
+
     setData(originData, newData) {
       Object.keys(newData).forEach((key) => {
         if (originData.hasOwnProperty(key)) {
@@ -389,12 +393,6 @@ export default {
         message: message,
         type: messageType
       });
-    },
-  },
-  computed: {
-    controlEnabled () {
-      // 返回当前系统是否在测试状态的真值， 控制控件的可用状态
-      return this.$store.state.isOnTest;
     },
   },
   sockets:{

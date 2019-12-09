@@ -173,10 +173,9 @@ export default {
     };
   },
   beforeMount() {
-    setTimeout(this.initSelectedEquipments, 1000);
+    setTimeout(this.initSelectedEquipments, 500);
     this.getLatestFiveEq();
   },
-  mounted() { },
   computed: {
     selectedEquipmentCount() {
       return this.$store.state.selectedEquipments.length;
@@ -196,7 +195,6 @@ export default {
           equipments.push(ele.device);
         });
         equipments = JSON.parse(JSON.stringify(equipments));
-        console.log(equipments);
         this.$store.commit('setSelectedEquipments', equipments);
       }
     },

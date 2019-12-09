@@ -161,10 +161,10 @@ export default {
           this.axios.post(this.util.testApi() + '/addEquipment', equipmentInfo)
             .then(res => {
               if (res.data.isSuccess) {
-                this.addMessage('仪器新增成功！', 'success');
+                this.addMessage(res.data.message, 'success');
                 this.$router.push({path: '/landingPage'});
               } else {
-                this.addMessage('仪器新增失败！', 'warning');
+                this.addMessage(res.data.message, 'warning');
               }
             })
             .catch(err => {

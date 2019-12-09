@@ -91,17 +91,30 @@ export default {
   },
   beforeMount() {
     // 获取测试模板信息，并初始化 data.testTemplate
-    setTimeout(this.initTestDeviceInfo, 1000);
-    this.axios.get(this.util.testApi() + '/testTemplate/get')
+    setTimeout(this.initTestDeviceInfo, 500);
+    this.InitTestTemplate();
+  },
+  computed: {
+    getCurrentState () {
+      return (this.testDeviceInfo.length === 0) && !this.$store.state.isOnTest;
+    },
+    systemControlsEnable () {
+      return this.$store.state.isOnTest;
+    },
+    cycleFromTemplate() {
+      return this.$store.state.cycle;
+    }
+  },
+  methods: {
+    InitTestTemplate() {
+      this.axios.get(this.util.testApi() + '/testTemplate/get')
       .then(res => {
         this.setData(this.testTemplate, res.data);
       })
       .catch(err => {
-        // 失败处理
-        console.log(err);
+        this.addMessage(`异常错误，请刷新后重试！${err.message}`, 'warning'); // 失败处理
       });
-  },
-  methods: {
+    },
     initTestDeviceInfo () {
       if (this.$store.state.isOnTest) {
         // 检查当前系统为测试状态，则使用测试数据进行初始化
@@ -208,7 +221,7 @@ export default {
         let data = {};
         let ids = equipment.config.IDS.concat(equipment.config.centerID);
         data['IDS'] = ids.sort((a, b) => a-b);
-        data['IDS'].forEach((ID) => {
+        data['IDS'].forEach((ID, index, IDS) => {
           data[ID] = [];
         });
         Object.assign(data, {
@@ -275,6 +288,7 @@ export default {
                 this.$store.commit('setIsOnTest', false);
                 // 清空 store.state 中已选择仪器数组
                 this.$store.commit('clearAllSelectedEquipments', false);
+                this.testDeviceInfo = [];
               }
               this.addMessage(messgae, type);
             })
@@ -299,14 +313,6 @@ export default {
       });
     },
   },
-  computed: {
-    getCurrentState () {
-      return (this.testDeviceInfo.length === 0) && !this.$store.state.isOnTest;
-    },
-    systemControlsEnable () {
-      return this.$store.state.isOnTest;
-    }
-  }
 };
 </script>
 

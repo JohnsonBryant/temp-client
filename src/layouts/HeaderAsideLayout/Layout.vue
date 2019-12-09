@@ -20,6 +20,7 @@
           background-color="#00142a"
           text-color="hsla(0, 0%, 100%, .65)"
           active-text-color="#409EFF"
+          :default-active="activeAsideMenu"
         >
           <template v-for="item in asideMenuConfig">
             <router-link v-if="!item.children" :to="item.path" :key="item.name">
@@ -69,6 +70,11 @@ export default {
     NavBar,
     AppMain,
   },
+  computed: {
+    activeAsideMenu() {
+      return this.$route.path;
+    }
+  }
 };
 </script>
 

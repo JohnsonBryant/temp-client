@@ -8,9 +8,10 @@ const store = new Vuex.Store({
     isOnTest: false,
     cycle: 10,
     isSendding: true,
-    equipments: [],
     isTestPreparing: false,
     selectedEquipments: [],
+    equipments: [],
+    deviceTestData: [],
   },
   mutations: {
     // 更改当前系统测试状态标识
@@ -41,7 +42,7 @@ const store = new Vuex.Store({
     clearAllSelectedEquipments: (state) => state.selectedEquipments.splice(0, state.selectedEquipments.length),
     // 设置选择仪器
     setSelectedEquipments: (state, equipments) => state.selectedEquipments.splice(0, state.selectedEquipments.length, ...equipments),
-    // 启动测试时，初始化设置测试仪器数组
+    // 启动测试时， 初始化设置测试仪器数组
     setEquiptments: (state, equipments) => state.equipments.splice(0, state.equipments.length, ...equipments),
     // 启动测试失败、或者停止测试时触发， 用于清空测试仪器信息数组
     resetEquipments: (state) => state.equipments = [],
@@ -91,3 +92,11 @@ export default store;
  *  在停止测试时，清空，reset 
  *  在进入测试管理页时， mounted 时， 使用
  */
+
+
+ /** state.deviceTestData
+  *  本次测试全部仪器所有数据
+  *  启动测试、 网页刷新时， 重新创建
+  *  后端推送数据时， 更新
+  *  停止测试，使用完时清空
+  */

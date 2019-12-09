@@ -19,7 +19,8 @@ export default {
             this.$store.commit('setIsOnTest', result.isOnTest);
             this.$store.commit('setCycle', result.cycle);
             this.$store.commit('setIsSendding', result.isSendding);
-            this.$store.commit('setEquiptments', result.equipments);
+            this.$store.commit('setEquiptments', result.equipments); // 与后端同步测试仪器信息，包含测试仪器数据
+            
           }
         })
         .catch(err => {
