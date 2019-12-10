@@ -81,7 +81,8 @@
                       </el-row>
                     </el-form>
                     <div class="wk-item-search-sensor">
-                      <el-button @click="SerachSensorClick" type="success" :disabled="controlEnabled">搜索传感器<i class="el-icon-check el-icon--right"></i></el-button>
+                      <el-button @click="SerachSensorClick" type="success" 
+                      >搜索传感器<i class="el-icon-check el-icon--right"></i></el-button>
                       <div class="wk-item-search-sensor-container">
                         <span class="searched-sensor-item" v-for="(sensorID) in searchedSensorIDs" :key="sensorID">{{ sensorID }}</span>
                       </div>
@@ -250,7 +251,7 @@ export default {
       rulesBattery: rules.Battery,
       rulesidSetting: rules.idSetting,
       rulestestTemplate: rules.testTemplate,
-      searchedSensorIDs: [1], // 存储搜索传感器功能搜索到的传感器ID
+      searchedSensorIDs: [], // 存储搜索传感器功能搜索到的传感器ID
     }
   },
   beforeMount() {
@@ -397,8 +398,7 @@ export default {
   },
   sockets:{
     directiveSearchSensors: function(pack){
-      // websocket 接收传感器数据
-      console.log(pack);
+      // websocket 接收传感器指令包
       let searchedSensorIDs = this.searchedSensorIDs;
       if (!searchedSensorIDs.includes(pack.deviceID)) {
         searchedSensorIDs.push(pack.deviceID);

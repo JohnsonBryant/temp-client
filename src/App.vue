@@ -10,7 +10,7 @@ export default {
   },
   methods: {
     initStore () {
-      // get nessary system data from back end
+      // get nessary system data from back end and init stroe when application is reloaded
       this.axios.get('/systemSync')
         .then(res => {
           let result = res.data;
@@ -20,7 +20,6 @@ export default {
             this.$store.commit('setCycle', result.cycle);
             this.$store.commit('setIsSendding', result.isSendding);
             this.$store.commit('setEquiptments', result.equipments); // 与后端同步测试仪器信息，包含测试仪器数据
-            
           }
         })
         .catch(err => {
@@ -29,7 +28,35 @@ export default {
           }
         });
     },
+    addMessage(message, messageType) {
+      this.$message({
+        message: message,
+        type: messageType
+      });
+    },
   },
+  sockets:{
+  connectMsg (pack) {
+    console.log(pack);
+  },
+  dataMsg (pack) {
+    console.log(pack);
+    this.$store.commit('setEquiptments', pack);
+  },
+  directiveModifyID (pack) {
+    console.log(pack);
+    this.addMessage(`修改传感器ID成功，当前传感器ID为 ${pack.deviceID}`, 'info');
+  },
+  directiveSearchSensors (pack) {
+    console.log(pack);
+  },
+  // directiveStartTest (pack) {
+  //   console.log(pack);
+  // },
+  // directiveStopTest (pack) {
+  //   console.log(pack);
+  // },
+},
 }
 </script>
 

@@ -31,13 +31,13 @@
                   :disabled="systemControlsEnable"
                 >一键配置</el-button>
               </el-col>
-              <el-col :span="3">
+              <!-- <el-col :span="3">
                 <el-button 
                   @click="stopTest" 
-                  class="test-header-btn" type="info" round
+                  class="test-header-btn" type="success" round
                   :disabled="!systemControlsEnable"
                 >停止测试</el-button>
-              </el-col>
+              </el-col> -->
               <el-col :span="3">
                 <el-button
                  @click="startTest" 
@@ -152,6 +152,8 @@ export default {
       this.testDeviceInfo.forEach((testDevice, index) => {
         testDevice.config.temp = testTemplate.temp;
         testDevice.config.humi = testTemplate.humi;
+        testDevice.config.centerID = testTemplate.centerID;
+        testDevice.config.IDS = testTemplate.IDS;
       });
     },
     startTest() {
@@ -222,7 +224,11 @@ export default {
         let ids = equipment.config.IDS.concat(equipment.config.centerID);
         data['IDS'] = ids.sort((a, b) => a-b);
         data['IDS'].forEach((ID, index, IDS) => {
-          data[ID] = [];
+          data[ID] = {
+            'temp': [],
+            'humi': [],
+            'batt': [],
+          };
         });
         Object.assign(data, {
           'evennessTemp': [],
