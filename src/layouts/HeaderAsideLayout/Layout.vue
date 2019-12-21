@@ -11,8 +11,8 @@
         size="256px"
       >
         <div class="logo">
-          <img src="../../assets/logo_feibing.png" width="40">
-          <span class="site-name">ADMIN LITE</span>
+          <!-- <img src="../../assets/logo_feibing.png" width="40"> -->
+          <span class="site-name">XX检测系统</span>
         </div>
         <el-menu
           mode="vertical"
@@ -83,6 +83,7 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
+  padding: 1vh;
   &:after {
     content: "";
     display: table;
@@ -91,7 +92,7 @@ export default {
 }
 
 .main-container {
-  min-height: 100vh;
+  min-height: 96vh;
   transition: margin-right 0.28s;
   margin-right: 0;
   background-color: #f0f2f5;

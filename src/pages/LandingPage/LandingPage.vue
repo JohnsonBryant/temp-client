@@ -21,71 +21,73 @@
             </router-link>
           </div>
         </el-card>
-        <!-- 已添加测试仪器信息展示表格，表格分页，表格可根据委托单位进行自定义检索表内已有信息 -->
-        <el-table
-          ref="filterTable"
-          :data="equipments"
-          style="width: 100%; margin-top: 10px;"
-          border resizable
-        >
-          <el-table-column
-            :filters="companyFilters"
-            :filter-method="filterHandler"
-            prop="company"
-            label="委托单位"
-            min-width="160"
-          ></el-table-column>
-          <el-table-column
-            prop="deviceName"
-            label="仪器名称"
-            min-width="150"
-          ></el-table-column>
-          <el-table-column
-            prop="deviceType"
-            label="仪器型号"
-            min-width="90"
-          ></el-table-column>
-          <el-table-column
-            prop="deviceID"
-            label="仪器编号"
-            min-width="90"
-            sortable
-          ></el-table-column>
-          <el-table-column
-            prop="em"
-            label="仪器厂家"
-            min-width="160"
-          ></el-table-column>
-          <el-table-column
-            prop="insertDate"
-            label="日期"
-            min-width="130"
-            column-key="date"
-            sortable
-          ></el-table-column>
-          <el-table-column label="操作" min-width="200">
-            <template slot-scope="scope">
-              <el-button
-                @click="handleAddToTest(scope.$index, scope.row)"
-                :disabled="controlEnabled"
-                size="mini"
-              >选择</el-button>
-              <el-button
-                @click="handleDuplicate(scope.$index, scope.row)"
-                :disabled="controlEnabled"
-                size="mini"
-              >复制</el-button>
-              <el-button
-                @click="handleDelete(scope.$index, scope.row)"
-                :disabled="controlEnabled"
-                size="mini"
-                type="danger"
-              >删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <el-card shadow="always" class="wk-container" >
+          <!-- 已添加测试仪器信息展示表格，表格分页，表格可根据委托单位进行自定义检索表内已有信息 -->
+          <el-table
+            ref="filterTable"
+            :data="equipments"
+            border resizable
+          >
+            <el-table-column
+              :filters="companyFilters"
+              :filter-method="filterHandler"
+              prop="company"
+              label="委托单位"
+              min-width="160"
+            ></el-table-column>
+            <el-table-column
+              prop="deviceName"
+              label="仪器名称"
+              min-width="150"
+            ></el-table-column>
+            <el-table-column
+              prop="deviceType"
+              label="仪器型号"
+              min-width="90"
+            ></el-table-column>
+            <el-table-column
+              prop="deviceID"
+              label="仪器编号"
+              min-width="90"
+              sortable
+            ></el-table-column>
+            <el-table-column
+              prop="em"
+              label="仪器厂家"
+              min-width="160"
+            ></el-table-column>
+            <el-table-column
+              prop="insertDate"
+              label="日期"
+              min-width="130"
+              column-key="date"
+              sortable
+            ></el-table-column>
+            <el-table-column label="操作" min-width="200">
+              <template slot-scope="scope">
+                <el-button
+                  @click="handleAddToTest(scope.$index, scope.row)"
+                  :disabled="controlEnabled"
+                  size="mini"
+                >选择</el-button>
+                <el-button
+                  @click="handleDuplicate(scope.$index, scope.row)"
+                  :disabled="controlEnabled"
+                  size="mini"
+                >复制</el-button>
+                <el-button
+                  @click="handleDelete(scope.$index, scope.row)"
+                  :disabled="controlEnabled"
+                  size="mini"
+                  type="danger"
+                >删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-card>
       </el-col>
     </el-row>
+
     <!-- 已选择测试仪器展示区域 -->
     <el-drawer
         class="selectEq-container"
@@ -343,6 +345,11 @@ export default {
 }
 .selectEp-footer-btn.right{
   margin-left: 20px;
+}
+
+.wk-container{
+  margin-top: 10px;
+  min-height: 75vh;  
 }
 
 </style>

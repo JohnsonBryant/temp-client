@@ -7,6 +7,7 @@
         class="main-control-btn" 
         type="success" round
         :disabled="!systemControlsEnable"
+        v-show="systemCurrentState"
       >停止测试</el-button>
       <!-- <el-button
         @click="startTest" 
@@ -17,8 +18,9 @@
       <el-button
         @click="saveData" 
         class="main-control-btn" 
-        type="primary" round>
-        下载数据<i class="el-icon-download el-icon--right"></i>
+        type="primary" round
+        v-show="showDownloadData"
+        >下载数据<i class="el-icon-download el-icon--right"></i>
       </el-button>
     </div>
   </el-menu>
@@ -40,10 +42,19 @@ export default {
     systemControlsEnable () {
       return this.$store.state.isOnTest;
     },
+    systemCurrentState() {
+      return this.$store.state.isOnTest;
+    },
+    showDownloadData() {
+      return this.$route.path === '/dashboard';
+    }
   },
   methods: {
     saveData() {
-      // 保存测试数据的 excel 表格，及数据曲线截图
+      
+      // forloop all equipments, flat equipment.data, save data to excel
+
+      // save graph image
       alert('数据下载成功！');
     },
     stopTest() {
@@ -69,8 +80,8 @@ export default {
               if (result.isSuccess) {
                 // 更新 store.state.isOntest = false
                 this.$store.commit('setIsOnTest', false);
-                // 清空 store.state 中已选择仪器数组
-                this.$store.commit('clearAllSelectedEquipments', false);
+                // // 清空 store.state 中已选择仪器数组
+                // this.$store.commit('clearAllSelectedEquipments', false);
                 // this.testDeviceInfo = [];
               }
               this.addMessage(messgae, type);

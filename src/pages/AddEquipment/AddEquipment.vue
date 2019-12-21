@@ -157,8 +157,9 @@ export default {
             item.insertDate = dnow
             return item
           })
-          //POST至后端新增测试仪器接口
-          this.axios.post(this.util.testApi() + '/addEquipment', equipmentInfo)
+          // 使用每个仪器信息 分别向 后端新增测试仪器接口发起 POST 请求
+          equipmentInfo.forEach(element => {            
+            this.axios.post(this.util.testApi() + '/addEquipment', [element])
             .then(res => {
               if (res.data.isSuccess) {
                 this.addMessage(res.data.message, 'success');
@@ -169,7 +170,8 @@ export default {
             })
             .catch(err => {
               console.log(err)
-            })
+            });
+          });
         }
       });
     },

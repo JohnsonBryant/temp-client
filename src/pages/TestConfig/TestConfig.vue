@@ -16,7 +16,7 @@
               <el-col :span="7">
                 <el-switch 
                   class="cycle-switch"
-                  v-model="testTemplate.isSendding"
+                  v-model="isSendding"
                   active-color="#13ce66"
                   inactive-color="#ff4949"
                   active-text="周期获取数据"
@@ -50,7 +50,7 @@
       </el-col>
     </el-row>
     <!-- 测试仪器配置区块，展示所有测试仪器配置信息 -->
-    <div class="testEq-container">
+    <el-card shadow="always" class="wk-container">
       <div v-if="getCurrentState">
         <!-- 未处在测试状态，且不是从设备管理页路由并传递参数到本页时显示 -->
         <h4 style="padding:10px 0 10px 10px; color: crimson;;">当前系统未处在测试状态，如需要进行测试，请切换到设备管理页，选择测试设备，启动测试！</h4>
@@ -61,7 +61,7 @@
         :device="item.device"
         :config="item.config"
       />
-    </div>
+    </el-card>
   </div>
 </template>
 
@@ -213,11 +213,15 @@ export default {
         this.addMessage('传感器ID错误，测试仪器下挂载的传感器ID存在重复，请检查后重试 ！');
         return;
       }
-      if ( selectedEquipments.some((item) => !this.util.isValidNumber(item.config.temp) || !this.util.isValidNumber(item.config.humi)) ) {
+      if ( selectedEquipments.some((item) => !this.util.isValidNumber(parseFloat(item.config.temp)) || !this.util.isValidNumber(parseFloat(item.config.humi))) ) {
         // 检查到测试仪器配置温湿度示值存在非数值。测试仪器配置的温湿度示值有效性检查，必须为数值
         this.addMessage('测试仪器的温湿度示值输入错误，温湿度示值必须为有效数值 ！');
         return;
       }
+      // 数据检验完成
+      // 清空 store.state 中已选择仪器数组
+      this.$store.commit('clearAllSelectedEquipments', false);
+
       // 拓展 selectedEquipments, 添加用于存储传感器数据、检测数据及对应数据时间的键值对
       selectedEquipments.forEach((equipment) => {
         let data = {};
@@ -333,12 +337,8 @@ export default {
   padding-left: 20px;
 }
 
-.testEq-container{
+.wk-container{
   margin-top: 10px;
-  background-color: rgb(255,255,255);
-  height: 72vh;
-  padding: 10px 10px 0 10px;
+  min-height: 75vh;  
 }
-
-
 </style>

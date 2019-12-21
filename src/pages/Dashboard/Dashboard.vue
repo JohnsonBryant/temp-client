@@ -1,15 +1,23 @@
 <template>
 <div class="dashboard">
-  <div v-for="(item,index) in DeviceTestDatas" :key="index">
-    <test-item 
-      :equipment="item.equipment"
-      :updateTime="item.updateTime"
-      :test-data="item.testData"
-      :temps="item.temps"
-      :humis="item.humis"
-    />
-  </div>
-
+  <el-card shadow="always">
+    实时检测
+  </el-card>
+  <el-card shadow="always" class="wk-container" >
+    <div v-if="showMessageState">
+      <!-- 未处在测试状态，且不是从设备管理页路由并传递参数到本页时显示 -->
+      <h4 style="padding:10px 0 10px 10px; color: crimson;;">当前系统未处在测试状态，如需要进行测试，请切换到设备管理页，选择测试设备，启动测试！</h4>
+    </div>
+    <div v-for="(item,index) in DeviceTestDatas" :key="index">
+      <test-item 
+        :equipment="item.equipment"
+        :updateTime="item.updateTime"
+        :test-data="item.testData"
+        :temps="item.temps"
+        :humis="item.humis"
+      />
+    </div>
+  </el-card>
 </div>
 </template>
 
@@ -56,7 +64,6 @@ const template = {
     {
       name:'ID1', // 根据数据生成， 传感器ID
       type:'line',
-      stack: '总量',
       data:[], // 传感器数据
     },
   ]
@@ -121,7 +128,10 @@ export default {
           deviceTestDatas.push(deviceTestData);
         });
       return deviceTestDatas;
-    }
+    },
+    showMessageState () {
+      return (this.$store.state.equipments.length === 0) && !this.$store.state.isOnTest;
+    },
   },
   methods: {
     prepareGraphData(title, key, sensorData) {
@@ -136,7 +146,6 @@ export default {
         let sensorSerie = {
           name: id,
           type: 'line',
-          stack: '总量',
           data: sensorData[id.slice(2)][key].slice(),
         };
         series.push(sensorSerie);
@@ -158,5 +167,10 @@ export default {
   top: 12px;
   right: 40px;
   z-index: 1005;
+}
+
+.wk-container{
+  margin-top: 10px;
+  min-height: 75vh;  
 }
 </style>
